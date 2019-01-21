@@ -1,0 +1,37 @@
+{
+    "Local CSV": {
+        "type": "csv",
+        "source": "local",
+        "url": "LOCAL_CSV"
+    },
+    "Remote CSV": {
+        "type": "csv",
+        "source": "remote",
+        "url": "public/data/Test_CSV.csv"
+    },
+    "Local JSON": {
+        "type": "json",
+        "source": "local",
+        "url": "LOCAL_JSON"
+    },
+    "Remote JSON": {
+        "type": "json",
+        "source": "remote",
+        "url": "public/data/Test_JSON.json"
+    },
+    "Local XML": {
+        "type": "xml",
+        "source": "local",
+        "url": "LOCAL_XML"
+    },
+    "Remote XML": {
+        "type": "xml",
+        "source": "remote",
+        "url": "public/data/Test_XML.xml"
+    },
+    "Testing gRPC":{
+        "type": "text",
+        "source": "remote",
+        "url": "rpc/John"
+    }
+}

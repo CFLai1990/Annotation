@@ -1,0 +1,21 @@
+{
+".bmp": "application/x-MS-bmp",
+".css": "text/css",
+".csv": "text/comma-separated-values",
+".html": " text/html",
+".ico": "image/ico",
+".ico": "image/vnd.microsoft.icon",
+".js": " text/plain",
+".json": " application/json",
+".less": " text/plain",
+".map": "text/plain",
+".pdf": "application/pdf",
+".png": "image/png",
+".svg": "image/svg-xml",
+".tpl": "text/plain",
+".ttf": "application/octet-stream",
+".woff": " application/x-font-woff",
+".woff2": "application/x-font-woff",
+".xml": "application/xml",
+"": "text/plain"
+}
