@@ -7,10 +7,7 @@ const argv = require('./argv')
 const port = require('./port')
 const setup = require('./middlewares/frontendMiddleware')
 const isDev = process.env.NODE_ENV !== 'production'
-const ngrok =
-  (isDev && process.env.ENABLE_TUNNEL) || argv.tunnel
-    ? require('ngrok')
-    : false
+const ngrok = (isDev && process.env.ENABLE_TUNNEL) || argv.tunnel ? require('ngrok') : false
 const resolve = require('path').resolve
 const app = express()
 
@@ -19,14 +16,9 @@ const router = require('./middlewares/router')
 const publicHandler = require('./middlewares/public/handler')(logger)
 const publicRouter = router(publicHandler, logger)
 
-const rpcServer = 'localhost:4000'
-const rpcHandler = require('./middlewares/rpc/handler')(logger, rpcServer)
-const rpcRouter = router(rpcHandler, logger)
-
 // If you need a backend, e.g. an API, add your custom backend-specific middleware here
 // app.use('/api', myApi);
 app.use('/public/', publicRouter)
-app.use('/rpc/', rpcRouter)
 
 // In production we need to pass these values in instead of relying on webpack
 setup(app, {

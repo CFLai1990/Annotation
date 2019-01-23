@@ -15,7 +15,8 @@ import * as THREE from 'three'
 import { CanvasView, Canvas } from 'components/CanvasView/index'
 
 import MsgBox from 'components/MsgBox'
-const msg = new MsgBox('TEST_VIEW')
+import io from 'socket.io-client'
+const Msg = new MsgBox('TEST_VIEW')
 
 class ExampleCanvasView extends React.PureComponent {
   // eslint-disable-line react/prefer-stateless-function
@@ -27,10 +28,17 @@ class ExampleCanvasView extends React.PureComponent {
     })
   }
   componentDidMount () {
+    let NLPsocket = io('http://localhost:5000/apis')
+    NLPsocket.on('connect', function () {
+      NLPsocket.emit('Hello', 'Edward')
+      NLPsocket.on('Hello', function (msg) {
+        Msg.log(msg)
+      })
+    })
     let { w: width, h: height } = this.props.viewBox
     let scene = new THREE.Scene()
     let camera = new THREE.PerspectiveCamera(30, width / height, 0.1, 1000)
-    let renderer = new THREE.WebGLRenderer({canvas: this.canvas})
+    let renderer = new THREE.WebGLRenderer({ canvas: this.canvas })
     renderer.setClearColor(new THREE.Color(1, 1, 1))
     let material = new THREE.MeshBasicMaterial({
       color: new THREE.Color(0, 0, 0),
@@ -59,8 +67,7 @@ class ExampleCanvasView extends React.PureComponent {
       width={this.props.viewBox.w}
       height={this.props.viewBox.h}
       {...this.props}
-      />
-    )
+      />)
   }
 }
 

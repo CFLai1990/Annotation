@@ -28,10 +28,5 @@
         "type": "xml",
         "source": "remote",
         "url": "public/data/Test_XML.xml"
-    },
-    "Testing gRPC":{
-        "type": "text",
-        "source": "remote",
-        "url": "rpc/John"
     }
 }
