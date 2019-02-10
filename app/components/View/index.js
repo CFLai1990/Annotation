@@ -26,7 +26,7 @@ const ViewPort = Flex.Box.extend`
 `;
 
 ViewPort.defaultProps = {
-  background: "#f0f0f0",
+  background: "#ffffff",
   margin: { w: viewMargin.w, h: viewMargin.h },
   borderWidth: 0.2,
   borderRadius: 1,

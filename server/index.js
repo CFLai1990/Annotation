@@ -19,6 +19,7 @@ const publicRouter = router(publicHandler, logger)
 // If you need a backend, e.g. an API, add your custom backend-specific middleware here
 // app.use('/api', myApi);
 app.use('/public/', publicRouter)
+app.use('/upload', () => {})
 
 // In production we need to pass these values in instead of relying on webpack
 setup(app, {

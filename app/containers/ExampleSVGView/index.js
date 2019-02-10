@@ -18,11 +18,15 @@ import { connect } from 'react-redux'
 import SVGView from 'components/SVGView/index'
 
 import MsgBox from 'components/MsgBox'
+import io from 'socket.io-client'
+import FSocket from 'utils/annotation/filesocket.js'
 const msg = new MsgBox('PROJECTION_VIEW')
+const VERSION = 'dl'
 
 class ExampleSVGView extends React.PureComponent {
   // eslint-disable-line react/prefer-stateless-function
   componentDidMount () {
+    this.initSocket()
     d3.select(this.refs.main)
       .append('circle')
       .attr('cx', 50)
@@ -30,6 +34,26 @@ class ExampleSVGView extends React.PureComponent {
       .attr('r', 5)
       .attr('fill', '#0f0')
   }
+
+  initSocket () {
+/*    let socket
+    switch (VERSION) {
+      case 'local':
+        socket = io('http://localhost:2020/api/annotation')
+        break
+      case 'db':
+        socket = io('http://192.168.10.9:2020/api/annotation')
+        break
+      case 'dl':
+        socket = io('http://192.168.10.21:2020/api/annotation')
+        break
+      case 'public':
+        break
+    }
+    let fsocket = new FSocket(socket)
+    socket.on('connect', () => { fsocket.callback() }) */
+  }
+
   render () {
     msg.prior('Data:').log(this.props.dataBody)
     return (<g ref='main' >
@@ -41,8 +65,7 @@ class ExampleSVGView extends React.PureComponent {
         cy='75'
         r='25'
         fill='#000' />
-    </g>
-    )
+    </g>)
   }
 }
 

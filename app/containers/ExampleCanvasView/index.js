@@ -15,7 +15,6 @@ import * as THREE from 'three'
 import { CanvasView, Canvas } from 'components/CanvasView/index'
 
 import MsgBox from 'components/MsgBox'
-import io from 'socket.io-client'
 const Msg = new MsgBox('TEST_VIEW')
 
 class ExampleCanvasView extends React.PureComponent {
@@ -28,13 +27,6 @@ class ExampleCanvasView extends React.PureComponent {
     })
   }
   componentDidMount () {
-    let NLPsocket = io('http://localhost:5000/apis')
-    NLPsocket.on('connect', function () {
-      NLPsocket.emit('Hello', 'Edward')
-      NLPsocket.on('Hello', function (msg) {
-        Msg.log(msg)
-      })
-    })
     let { w: width, h: height } = this.props.viewBox
     let scene = new THREE.Scene()
     let camera = new THREE.PerspectiveCamera(30, width / height, 0.1, 1000)
@@ -54,7 +46,7 @@ class ExampleCanvasView extends React.PureComponent {
     scene.add(cube, circle)
     camera.position.z = 5
     let animate = function () {
-      requestAnimationFrame(animate)
+      window.requestAnimationFrame(animate)
       cube.rotation.x += 0.01
       cube.rotation.y += 0.01
       renderer.render(scene, camera)

@@ -43,7 +43,15 @@ import configureStore from "./configureStore";
 import { translationMessages } from "./i18n";
 
 // Import CSS reset and Global Styles
+import "styles/external/fileinput.min.css"
+import "styles/external/jquery.loadingmodal.min.css"
 import "./global-styles";
+
+// Import external javascripts
+import 'utils/annotation/libs/jquery.loadingmodal.js'
+import 'utils/annotation/libs/annyang.min.js'
+import '../node_modules/bootstrap-fileinput/js/fileinput.js'
+import '../node_modules/bootstrap-fileinput/themes/fas/theme.js'
 
 // Create redux store with history
 const initialState = {};
