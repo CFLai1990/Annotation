@@ -47,7 +47,7 @@ const msg = new MsgBox('IMAGE_VIEW')
 const MESSAGE = 'OD_Image'
 const VERSION = 'dl'
 
-class DescriptionView extends React.PureComponent {
+class ImageView extends React.PureComponent {
   // eslint-disable-line react/prefer-stateless-function
   componentDidMount () {
     this.initSocket()
@@ -98,5 +98,5 @@ const mapStateToProps = createSelector(makeSelectData(), dataBody => ({
 }))
 
 export default View.Decorator(
-  connect(mapStateToProps)(DescriptionView)
+  connect(mapStateToProps)(ImageView)
 )
