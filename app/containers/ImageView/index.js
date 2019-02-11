@@ -51,7 +51,7 @@ class DescriptionView extends React.PureComponent {
   }
 
   componentDidMount () {
-    // this.initSocket()
+    this.initSocket()
   }
 
   initSocket () {
