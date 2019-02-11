@@ -55,6 +55,11 @@ class DescriptionView extends React.PureComponent {
   }
 
   initSocket () {
+    /* message:
+      'OD_Image': get the image with masks
+      'OD_Mask': get the mask parameters
+    */
+    this.message = 'OD_Image'
     let socket
     switch (VERSION) {
       case 'local':
@@ -70,7 +75,7 @@ class DescriptionView extends React.PureComponent {
         break
     }
     this.socket = socket
-    let fsocket = new FSocket(this.socket)
+    let fsocket = new FSocket(this.socket, this.message)
     this.socket.on('connect', () => { fsocket.callback() })
   }
 

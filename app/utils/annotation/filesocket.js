@@ -4,13 +4,9 @@ import IView from './imgviewer.js'
 import Modal from './loading.js'
 
 class FSocket {
-  constructor (socket) {
+  constructor (socket, message) {
     this.socket = socket
-    /* message:
-      'OD_Image': get the image with masks
-      'OD_Mask': get the mask parameters
-    */
-    this.message = 'OD_Image'
+    this.message = message
     this.data = null
     this.fread = new FRead()
     this.fload = new FLoad()
