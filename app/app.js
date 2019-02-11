@@ -46,6 +46,7 @@ import { translationMessages } from "./i18n";
 import "styles/external/fileinput.min.css"
 import "styles/external/jquery.loadingmodal.min.css"
 import "./global-styles";
+import "styles/lzx.css"
 
 // Import external javascripts
 import 'utils/annotation/libs/jquery.loadingmodal.js'

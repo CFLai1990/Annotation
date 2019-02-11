@@ -44,7 +44,8 @@ const msg = new MsgBox('IMAGE_VIEW')
   'OD_Image': get the image with masks
   'OD_Mask': get the mask parameters
 */
-const MESSAGE = 'OD_Image'
+// const MESSAGE = 'OD_Image'
+const MESSAGE = 'OD_Mask'
 const VERSION = 'dl'
 
 class ImageView extends React.PureComponent {
