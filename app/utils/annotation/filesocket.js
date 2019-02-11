@@ -10,7 +10,7 @@ class FSocket {
     this.data = null
     this.fread = new FRead()
     this.fload = new FLoad()
-    this.iview = new IView(this.message)
+    this.iview = new IView(message)
     this.mdl = new Modal()
     this.fload.init()
   }
@@ -26,7 +26,7 @@ class FSocket {
     this.fload.bind('fileloaded', (event, file) => {
       this.fread.getFile(file)
       this.fread.read((data) => {
-        this.iview.showImg(data)
+        this.getData(data)
       })
     })
     // Remove the file when cleared
@@ -39,7 +39,7 @@ class FSocket {
       if (this.data !== null) {
         // Show the original image
         this.fload.show(false)
-        this.iview.showImg(this.data)
+        this.iview.getOriginal(this.data)
         this.iview.show()
         // Upload the original image
         this.handleEmit()
@@ -50,7 +50,7 @@ class FSocket {
   handleReceive () {
     this.socket.on(this.message, (data) => {
       // Show the processed image
-      this.iview.getData(data)
+      this.iview.getResult(data)
       this.iview.show()
       this.mdl.show(false)
     })

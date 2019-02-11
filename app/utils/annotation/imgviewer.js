@@ -10,19 +10,23 @@ class ImgViewer {
     this.id = '#odresult'
     this.message = message
   }
-  showImg (data) {
+  getOriginal (img) {
     switch (this.message) {
       case 'OD_Image':
-        $(`${this.id} .img`).attr('src', `data:${data.type};base64,${data.data}`)
+        $(`${this.id} .img`).attr('src', `data:${img.type};base64,${img.data}`)
         break
       case 'OD_Mask':
-        d3.select(`${this.id} .img`)
-        .selectAll('.content')
-        .data([data])
-        .enter()
-        .append('image')
-        .attr('class', 'content')
-        .attr('src', (d) => { return `data:${d.type};base64,${d.data}` })
+        console.log('Before:', img)
+        break
+    }
+  }
+  getResult (img) {
+    switch (this.message) {
+      case 'OD_Image':
+        $(`${this.id} .img`).attr('src', `data:${img.type};base64,${img.data}`)
+        break
+      case 'OD_Mask':
+        console.log('After:', img)
         break
     }
   }

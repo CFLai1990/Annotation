@@ -9,9 +9,7 @@
  * the linting exception.
  */
 
-import $ from 'jquery'
 import React from 'react'
-import * as d3 from 'd3'
 import { createSelector } from 'reselect'
 import { makeSelectData } from './selectors'
 import { connect } from 'react-redux'
