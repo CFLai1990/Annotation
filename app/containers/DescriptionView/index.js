@@ -75,7 +75,7 @@ class DescriptionView extends React.PureComponent {
   }
 
   componentDidMount () {
-    this.initSpeechRecognition()
+    // this.initSpeechRecognition()
     /*    if (annyang) {
           let commands = {
             'hello': function () {
