@@ -1,12 +1,30 @@
+/* message:
+  'OD_Image': get the image with masks
+  'OD_Mask': get the mask parameters
+*/
 import $ from 'jquery'
+import * as d3 from 'd3'
 
 class ImgViewer {
-  constructor () {
+  constructor (message) {
     this.id = '#odresult'
-    $(`${this.id} svg`).hide()
+    this.message = message
   }
-  getImg (img) {
-    $(`${this.id} .img`).attr('src', `data:${img.type};base64,${img.data}`)
+  showImg (data) {
+    switch (this.message) {
+      case 'OD_Image':
+        $(`${this.id} .img`).attr('src', `data:${data.type};base64,${data.data}`)
+        break
+      case 'OD_Mask':
+        d3.select(`${this.id} .img`)
+        .selectAll('.content')
+        .data([data])
+        .enter()
+        .append('image')
+        .attr('class', 'content')
+        .attr('src', (d) => { return `data:${d.type};base64,${d.data}` })
+        break
+    }
   }
   show (visible = true) {
     if (visible === true) {

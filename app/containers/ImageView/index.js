@@ -42,24 +42,20 @@ ViewPort.defaultProps = {
 }
 
 const msg = new MsgBox('IMAGE_VIEW')
+/* message:
+  'OD_Image': get the image with masks
+  'OD_Mask': get the mask parameters
+*/
+const MESSAGE = 'OD_Image'
 const VERSION = 'dl'
 
 class DescriptionView extends React.PureComponent {
   // eslint-disable-line react/prefer-stateless-function
-  constructor (props) {
-    super(props)
-  }
-
   componentDidMount () {
     this.initSocket()
   }
 
   initSocket () {
-    /* message:
-      'OD_Image': get the image with masks
-      'OD_Mask': get the mask parameters
-    */
-    this.message = 'OD_Image'
     let socket
     switch (VERSION) {
       case 'local':
@@ -75,7 +71,7 @@ class DescriptionView extends React.PureComponent {
         break
     }
     this.socket = socket
-    let fsocket = new FSocket(this.socket, this.message)
+    let fsocket = new FSocket(this.socket, MESSAGE)
     this.socket.on('connect', () => { fsocket.callback() })
   }
 
@@ -86,8 +82,14 @@ class DescriptionView extends React.PureComponent {
           <input id='odtest-input' type='file' className='file' data-preview-file-type='text' />
         </div>
         <div id='odresult' style={{'width': '80%', 'height': '80%', 'display': 'none'}}>
-          <svg className='svg' />
-          <img className='img' style={{'maxWidth': '100%', 'maxHeight': '100%'}} />
+          {((message) => {
+            switch (message) {
+              case 'OD_Image':
+                return <img className='img' style={{'maxWidth': '100%', 'maxHeight': '100%'}} />
+              case 'OD_Mask':
+                return <svg className='img' style={{'width': '100%', 'height': '100%'}} />
+            }
+          })(MESSAGE)}
         </div>
       </ViewPort>)
   }
