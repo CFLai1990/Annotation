@@ -17,7 +17,7 @@ import { connect } from 'react-redux'
 import View from 'components/View/index'
 
 import MsgBox from 'components/MsgBox'
-import io from 'socket.io-client'
+import ClientIO from 'utils/annotation/csocketio.js'
 import FSocket from 'utils/annotation/filesocket.js'
 import Flex from 'components/Flex/index'
 const ViewPort = Flex.Box.extend`
@@ -46,7 +46,7 @@ const msg = new MsgBox('IMAGE_VIEW')
 */
 // const MESSAGE = 'OD_Image'
 const MESSAGE = 'OD_Mask'
-const VERSION = 'dl'
+const MACHINE = 'dl'
 
 class ImageView extends React.PureComponent {
   // eslint-disable-line react/prefer-stateless-function
@@ -55,23 +55,16 @@ class ImageView extends React.PureComponent {
   }
 
   initSocket () {
-    let socket
-    switch (VERSION) {
-      case 'local':
-        socket = io('http://localhost:2020/api/annotation')
-        break
-      case 'db':
-        socket = io('http://192.168.10.9:2020/api/annotation')
-        break
-      case 'dl':
-        socket = io('http://192.168.10.21:2020/api/annotation')
-        break
-      case 'public':
-        break
-    }
-    this.socket = socket
+    this.socket = new ClientIO({
+      'address': MACHINE,
+      'port': 2020,
+      'namespace': 'api/annotation'
+    })
     let fsocket = new FSocket(this.socket, MESSAGE)
-    this.socket.on('connect', () => { fsocket.callback() })
+    this.socket.on('connect', () => {
+      // add more callbacks if necessary
+      fsocket.onConnect()
+    })
   }
 
   render () {

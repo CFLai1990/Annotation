@@ -55,7 +55,7 @@ class FSocket {
       this.mdl.show(false)
     })
   }
-  callback () {
+  onConnect () {
     this.handleUpload()
     this.handleReceive()
   }

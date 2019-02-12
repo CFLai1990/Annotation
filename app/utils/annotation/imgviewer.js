@@ -31,14 +31,14 @@ class ImgViewer {
         console.log('After:', img)
         let target = img[0][Object.keys(img[0])[0]]['mask'][0]
         let path = 'M'
-        path += target.map(d=>'' + d.join(' ')).join('L')
+        path += target.map(d => '' + d.join(' ')).join('L')
         console.log('path', path)
         var i = new Image()
 
-        i.onload = function(){
-         console.warn( i.width+", "+i.height );
-         d3.select(`${this.id} .img`).attr('viewBox', '0,0,' + i.width + ',' + i.height)
-        };
+        i.onload = function () {
+          console.warn(i.width + ', ' + i.height)
+          d3.select(`${this.id} .img`).attr('viewBox', '0,0,' + i.width + ',' + i.height)
+        }
         let src = `data:${this.imgOriginal.type};base64,${this.imgOriginal.data}`
         i.src = src
         d3.select(`${this.id} .img`).append('g').append('image').attr('xlink:href', src)
