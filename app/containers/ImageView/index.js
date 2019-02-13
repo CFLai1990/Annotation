@@ -20,7 +20,7 @@ import MsgBox from 'components/MsgBox'
 import ClientIO from 'utils/annotation/csocketio.js'
 import FSocket from 'utils/annotation/filesocket.js'
 import Flex from 'components/Flex/index'
-const ViewPort = Flex.Box.extend`
+const ImgDiv = Flex.Box.extend`
     width: ${props =>
         Flex.width(props.size, props.margin, props.parentSize)}vw;
     height: ${props =>
@@ -32,11 +32,10 @@ const ViewPort = Flex.Box.extend`
     background: ${props => props.background};
     margin: ${props => props.margin.h + 'vh ' + props.margin.w + 'vw'};
 `
-ViewPort.defaultProps = {
+ImgDiv.defaultProps = {
   parentSize: [0, 0], // The size of its parent node
-  size: { w: 90, h: 90 }, // The size of the whole svg
-  sizeRatio: { w: 0.9, h: 0.9 }, // The size ratio of the svg in its parent node
-  margin: { w: 0, h: 0 } // Margin of the svg
+  size: { w: 90, h: 90 }, // The size ratio of the whole viewpoint
+  margin: { w: 0, h: 0 } // Margin of the viewpoint
 }
 
 const msg = new MsgBox('IMAGE_VIEW')
@@ -50,6 +49,12 @@ const MACHINE = 'dl'
 
 class ImageView extends React.PureComponent {
   // eslint-disable-line react/prefer-stateless-function
+  constructor (props) {
+    super(props)
+    let sizeRatio = props.inner.sizeRatio
+    props.inner.size = { w: sizeRatio.w * 100, h: sizeRatio.h * 100 }
+  }
+
   componentDidMount () {
     this.initSocket()
   }
@@ -69,11 +74,11 @@ class ImageView extends React.PureComponent {
 
   render () {
     return (
-      <ViewPort>
-        <div id='odtest' style={{'width': '80%', 'height': '80%'}}>
+      <ImgDiv parentSize={this.props.parentSize} {...this.props.inner}>
+        <div id='odtest' style={{'width': '100%', 'height': '100%'}}>
           <input id='odtest-input' type='file' className='file' data-preview-file-type='text' />
         </div>
-        <div id='odresult' style={{'width': '80%', 'height': '80%', 'display': 'none'}}>
+        <div id='odresult' style={{'width': '100%', 'height': '100%', 'display': 'none'}}>
           {((message) => {
             switch (message) {
               case 'OD_Image':
@@ -83,7 +88,7 @@ class ImageView extends React.PureComponent {
             }
           })(MESSAGE)}
         </div>
-      </ViewPort>)
+      </ImgDiv>)
   }
 }
 

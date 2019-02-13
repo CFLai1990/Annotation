@@ -18,10 +18,8 @@ import { connect } from 'react-redux'
 import View from 'components/View/index'
 
 import MsgBox from 'components/MsgBox'
-import io from 'socket.io-client'
-import FSocket from 'utils/annotation/filesocket.js'
 import Flex from 'components/Flex/index'
-const ViewPort = Flex.Box.extend`
+const DspDiv = Flex.Box.extend`
     width: ${props =>
         Flex.width(props.size, props.margin, props.parentSize)}vw;
     height: ${props =>
@@ -33,12 +31,12 @@ const ViewPort = Flex.Box.extend`
     background: ${props => props.background};
     margin: ${props => props.margin.h + 'vh ' + props.margin.w + 'vw'};
 `
-ViewPort.defaultProps = {
+DspDiv.defaultProps = {
   parentSize: [0, 0], // The size of its parent node
-  size: { w: 90, h: 90 }, // The size of the whole svg
-  sizeRatio: { w: 0.9, h: 0.9 }, // The size ratio of the svg in its parent node
-  margin: { w: 0, h: 0 } // Margin of the svg
+  size: { w: 90, h: 90 }, // The size ratio of the whole viewpoint
+  margin: { w: 0, h: 0 } // Margin of the viewpoint
 }
+
 const msg = new MsgBox('DESCRIPTION_VIEW')
 // const annyang = window.annyang
 
@@ -46,6 +44,8 @@ class DescriptionView extends React.PureComponent {
   // eslint-disable-line react/prefer-stateless-function
   constructor (props) {
     super(props)
+    let sizeRatio = props.inner.sizeRatio
+    props.inner.size = { w: sizeRatio.w * 100, h: sizeRatio.h * 100 }
   }
 
   initSpeechRecognition () {
@@ -91,12 +91,10 @@ class DescriptionView extends React.PureComponent {
 
   render () {
     return (
-      <ViewPort>
-        <div id='nlptest' style={{'width': '80%', 'height': '80%'}}>
-          <h1>Please input a description:</h1>
-          <textarea className='content' style={{'width': '80%', 'height': '80%', 'border': '1px #aaa solid'}} />
-        </div>
-      </ViewPort>)
+      <DspDiv parentSize={this.props.parentSize} {...this.props.inner} id='nlptest' >
+        <h1>Please input a description:</h1>
+        <textarea className='content' style={{'width': '100%', 'border': '1px #aaa solid'}} />
+      </DspDiv>)
   }
 }
 
