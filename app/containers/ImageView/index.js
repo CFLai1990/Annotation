@@ -64,13 +64,15 @@ class ImageView extends React.PureComponent {
         console.log('this.fsocket', this.fsocket)
 
         if (this.fsocket.data) {
-          if (message.search(/dog/i) >=0) {
-            console.log('this.fsocket.handleShow dog')
-            this.fsocket.handleShow('dog')
-          } else if (message.search(/cat/i) >= 0) {
-            console.log('this.fsocket.handleShow cat')
-            this.fsocket.handleShow('cat')
-          }
+          // if (message.search(/dog/i) >=0) {
+          //   console.log('this.fsocket.handleShow dog')
+          //   this.fsocket.handleShow('dog')
+          // } else if (message.search(/cat/i) >= 0) {
+          //   console.log('this.fsocket.handleShow cat')
+          //   this.fsocket.handleShow('cat')
+          // }
+          this.fsocket.handleShowAuto(message)
+
 
         } else {
           alert('Please upload an image file first!')

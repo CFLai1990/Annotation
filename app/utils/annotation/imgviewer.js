@@ -46,7 +46,12 @@ class ImgViewer {
         let keysObj = {}
         img.forEach((d, i) => {
           let key = Object.keys(d)
-          keysObj[key] = i
+          if (keysObj[key]) {
+            keysObj[key].push(i)
+          } else {
+            keysObj[key] = []
+            keysObj[key].push(i)
+          }
         })
         this.keysObj = keysObj
         this.keysArr = Object.keys(keysObj)
@@ -66,6 +71,29 @@ class ImgViewer {
         console.log('path', path)
         d3.select(`${this.id} .img`).append('g').attr('class', 'gPath').append('path').attr('class', 'mask-path').attr('d', path)
       }
+    }
+  }
+  showObjAuto (message=null) {
+    d3.select(`${this.id} .img`).selectAll('.gPath').remove()
+    if (message && this.imgResult) {
+      let keys = this.keysArr
+      let msg = message.toLowerCase()
+      for (let i=0; i<keys.length; i++) {
+        let objectKey = keys[i]
+        if (msg.indexOf(objectKey.toLowerCase()) > -1) {
+          let gPath = d3.select(`${this.id} .img`).append('g').attr('class', 'gPath')
+          this.keysObj[objectKey].forEach(index => {
+            let target = this.imgResult[index][objectKey]['mask'][0]
+            let path = 'M'
+            path += target.map(d => '' + d.join(' ')).join('L')
+            // console.log('path', path)
+            gPath.append('path').attr('class', 'mask-path').attr('d', path)
+          })
+          
+          break
+        }
+      }
+        
     }
   }
   show (visible = true) {

@@ -65,6 +65,11 @@ class FSocket {
     this.iview.showObj(objectKey)
     this.iview.show()
   }
+  handleShowAuto (message=null) {
+    // Show the processed image
+    this.iview.showObjAuto(message)
+    this.iview.show()
+  }
 }
 
 export default FSocket

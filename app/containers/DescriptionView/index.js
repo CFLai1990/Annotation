@@ -56,7 +56,7 @@ class DescriptionView extends React.PureComponent {
     emitter.emit('commitDiscription', message);
   }
   handleChange (event) {
-    console.log('event', event)
+    // console.log('event', event)
     this.setState({valueText: event.target.value})
   }
 
