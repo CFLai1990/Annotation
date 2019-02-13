@@ -20,6 +20,8 @@ import MsgBox from 'components/MsgBox'
 import ClientIO from 'utils/annotation/csocketio.js'
 import FSocket from 'utils/annotation/filesocket.js'
 import Flex from 'components/Flex/index'
+import emitter from '../../utils/events'
+
 const ImgDiv = Flex.Box.extend`
     width: ${props =>
         Flex.width(props.size, props.margin, props.parentSize)}vw;
@@ -57,6 +59,24 @@ class ImageView extends React.PureComponent {
 
   componentDidMount () {
     this.initSocket()
+    this.eventEmitter = emitter.addListener('commitDiscription', (message) => {
+        console.log('ImageView eventEmitter', message)
+        console.log('this.fsocket', this.fsocket)
+
+        if (this.fsocket.data) {
+          if (message.search(/dog/i) >=0) {
+            console.log('this.fsocket.handleShow dog')
+            this.fsocket.handleShow('dog')
+          } else if (message.search(/cat/i) >= 0) {
+            console.log('this.fsocket.handleShow cat')
+            this.fsocket.handleShow('cat')
+          }
+
+        } else {
+          alert('Please upload an image file first!')
+        }
+        
+      })
   }
 
   initSocket () {
@@ -65,10 +85,10 @@ class ImageView extends React.PureComponent {
       'port': 2020,
       'namespace': 'api/annotation'
     })
-    let fsocket = new FSocket(this.socket, MESSAGE)
+    this.fsocket = new FSocket(this.socket, MESSAGE)
     this.socket.on('connect', () => {
       // add more callbacks if necessary
-      fsocket.onConnect()
+      this.fsocket.onConnect()
     })
   }
 

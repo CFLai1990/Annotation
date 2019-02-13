@@ -10,6 +10,9 @@ class ImgViewer {
     this.imgOriginal = null
     this.id = '#odresult'
     this.message = message
+    this.imgResult = null
+    this.keysArr = []
+    this.keysObj = {}
   }
   getOriginal (img) {
     switch (this.message) {
@@ -23,18 +26,15 @@ class ImgViewer {
     }
   }
   getResult (img) {
+    this.imgResult = img
     switch (this.message) {
       case 'OD_Image':
         $(`${this.id} .img`).attr('src', `data:${img.type};base64,${img.data}`)
         break
       case 'OD_Mask':
         console.info('After:', img)
-        let target = img[0][Object.keys(img[0])[0]]['mask'][0]
-        let path = 'M'
-        path += target.map(d => '' + d.join(' ')).join('L')
-        console.log('path', path)
+        d3.select(`${this.id} .img`).html('')
         var i = new Image()
-
         i.onload = function () {
           console.warn(i.width + ', ' + i.height)
           d3.select(`${this.id} .img`).attr('viewBox', '0,0,' + i.width + ',' + i.height)
@@ -42,10 +42,30 @@ class ImgViewer {
         let src = `data:${this.imgOriginal.type};base64,${this.imgOriginal.data}`
         i.src = src
         d3.select(`${this.id} .img`).append('g').append('image').attr('xlink:href', src)
-
-        d3.select(`${this.id} .img`).append('g').append('path').attr('class', 'mask-path').attr('d', path)
-
+        
+        let keysObj = {}
+        img.forEach((d, i) => {
+          let key = Object.keys(d)
+          keysObj[key] = i
+        })
+        this.keysObj = keysObj
+        this.keysArr = Object.keys(keysObj)
+        console.info('image keysObj:', this.keysObj)
+        console.info('image keysArr:', this.keysArr)
         break
+    }
+  }
+  showObj (objectKey=null) {
+    d3.select(`${this.id} .img`).selectAll('.gPath').remove()
+    if (objectKey && this.imgResult) {
+      let keys = this.keysArr
+      if (keys.includes(objectKey)){
+        let target = this.imgResult[this.keysObj[objectKey]][objectKey]['mask'][0]
+        let path = 'M'
+        path += target.map(d => '' + d.join(' ')).join('L')
+        console.log('path', path)
+        d3.select(`${this.id} .img`).append('g').attr('class', 'gPath').append('path').attr('class', 'mask-path').attr('d', path)
+      }
     }
   }
   show (visible = true) {

@@ -19,6 +19,7 @@ import View from 'components/View/index'
 
 import MsgBox from 'components/MsgBox'
 import Flex from 'components/Flex/index'
+import emitter from '../../utils/events'
 const DspDiv = Flex.Box.extend`
     width: ${props =>
         Flex.width(props.size, props.margin, props.parentSize)}vw;
@@ -46,6 +47,17 @@ class DescriptionView extends React.PureComponent {
     super(props)
     let sizeRatio = props.inner.sizeRatio
     props.inner.size = { w: sizeRatio.w * 100, h: sizeRatio.h * 100 }
+    this.state = {
+      valueText: ''
+    }
+  }
+  handleSubmit (message) {
+    console.log('handleSubmit', message)
+    emitter.emit('commitDiscription', message);
+  }
+  handleChange (event) {
+    console.log('event', event)
+    this.setState({valueText: event.target.value})
   }
 
   initSpeechRecognition () {
@@ -91,9 +103,11 @@ class DescriptionView extends React.PureComponent {
 
   render () {
     return (
-      <DspDiv parentSize={this.props.parentSize} {...this.props.inner} id='nlptest' >
+      <DspDiv parentSize={this.props.parentSize} {...this.props.inner} id='nlptest' > 
         <h1>Please input a description:</h1>
-        <textarea className='content' style={{'width': '100%', 'border': '1px #aaa solid'}} />
+          <textarea className='content' style={{'width': '100%', 'height': '50%', 'border': '1px #aaa solid'}} value={this.state.valueText} onChange={this.handleChange.bind(this)} />
+        <button type="button" className="btn btn-primary" onClick={this.handleSubmit.bind(this, this.state.valueText)}>OK</button>
+
       </DspDiv>)
   }
 }

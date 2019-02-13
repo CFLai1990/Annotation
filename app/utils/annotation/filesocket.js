@@ -8,6 +8,7 @@ class FSocket {
     this.socket = socket
     this.message = message
     this.data = null
+    this.result = null
     this.fread = new FRead()
     this.fload = new FLoad()
     this.iview = new IView(message)
@@ -48,16 +49,21 @@ class FSocket {
     })
   }
   handleReceive () {
+    let that = this
     this.socket.on(this.message, (data) => {
-      // Show the processed image
+      that.result = data
       this.iview.getResult(data)
-      this.iview.show()
       this.mdl.show(false)
     })
   }
   onConnect () {
     this.handleUpload()
     this.handleReceive()
+  }
+  handleShow (objectKey=null) {
+    // Show the processed image
+    this.iview.showObj(objectKey)
+    this.iview.show()
   }
 }
 

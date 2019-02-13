@@ -51,14 +51,14 @@ class HomePageBody extends React.PureComponent {
 
     // Row 1
     this.R1 = new Flex.Unit(Body.style.viewWidth, Body.style.viewHeight * 0.95) // The real (vw, vh)
-    this.R1_C1 = this.R1.child(1.0, 1.0)
-    this.R1_C1_View1 = this.R1.child(0.5, 1.0)
-    this.R1_C1_View2 = this.R1.child(0.5, 1.0)
+    // this.R1_R1_View1 = this.R1.child(1.0, 0.5)
+    // this.R1_R2_View2 = this.R1.child(1.0, 0.5)
+    this.R1_R1_View1 = this.R1.child(0.5, 1.0)
+    this.R1_R2_View2 = this.R1.child(0.5, 1.0)
 
     this.View_Dsp = {
       sizeRatio: {w: 0.9, h: 0.9}
     }
-    this.R1_C2_View = this.R1.child(1.0, 0.5)
 
     this.View_Img = {
       sizeRatio: {w: 0.9, h: 0.9}
@@ -70,9 +70,12 @@ class HomePageBody extends React.PureComponent {
     return (
       <Body>
         <Row size={this.R1.size}>
-          <ImageView size={this.R1_C1_View1.size} inner={this.View_Img} />
-          <DescriptionView size={this.R1_C1_View2.size} inner={this.View_Dsp} />
+          <ImageView size={this.R1_R1_View1.size} inner={this.View_Img} />
+          <DescriptionView size={this.R1_R2_View2.size} inner={this.View_Dsp} />
         </Row>
+        {/*<Row size={this.R2.size}>
+          <button type="button" className="btn btn-primary">OK</button>
+        </Row>*/}
       </Body>
     )
   }
