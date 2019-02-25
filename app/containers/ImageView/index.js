@@ -59,26 +59,24 @@ class ImageView extends React.PureComponent {
 
   componentDidMount () {
     this.initSocket()
-    this.eventEmitter = emitter.addListener('commitDiscription', (message) => {
-        console.log('ImageView eventEmitter', message)
-        console.log('this.fsocket', this.fsocket)
-
-        if (this.fsocket.data) {
-          // if (message.search(/dog/i) >=0) {
-          //   console.log('this.fsocket.handleShow dog')
-          //   this.fsocket.handleShow('dog')
-          // } else if (message.search(/cat/i) >= 0) {
-          //   console.log('this.fsocket.handleShow cat')
-          //   this.fsocket.handleShow('cat')
-          // }
-          this.fsocket.handleShowAuto(message)
-
-
-        } else {
-          alert('Please upload an image file first!')
-        }
-        
-      })
+    this.eventEmitter = emitter.addListener('doneDescription', (message) => {
+      console.log('ImageView eventEmitter', message)
+      console.log('this.fsocket', this.fsocket)
+      if (this.fsocket.data) {
+        // if (message.search(/dog/i) >=0) {
+        //   console.log('this.fsocket.handleShow dog')
+        //   this.fsocket.handleShow('dog')
+        // } else if (message.search(/cat/i) >= 0) {
+        //   console.log('this.fsocket.handleShow cat')
+        //   this.fsocket.handleShow('cat')
+        // }
+        // this.fsocket.handleShowAuto(message)
+        this.fsocket.handleShowSentences(message)
+      } else {
+        alert('Please upload an image file first!')
+      }
+      
+    })
   }
 
   initSocket () {
@@ -96,17 +94,17 @@ class ImageView extends React.PureComponent {
 
   render () {
     return (
-      <ImgDiv parentSize={this.props.parentSize} {...this.props.inner}>
+      <ImgDiv parentSize={this.props.parentSize} {...this.props.inner} style={{'overflow': 'hidden'}}>
         <div id='odtest' style={{'width': '100%', 'height': '100%'}}>
           <input id='odtest-input' type='file' className='file' data-preview-file-type='text' />
         </div>
-        <div id='odresult' style={{'width': '100%', 'height': '100%', 'display': 'none'}}>
+        <div id='odresult' style={{'position': 'relative', 'width': '100%', 'height': '100%', 'display': 'none'}}>
           {((message) => {
             switch (message) {
               case 'OD_Image':
                 return <img className='img' style={{'maxWidth': '100%', 'maxHeight': '100%'}} />
               case 'OD_Mask':
-                return <svg className='img' style={{'width': '100%', 'height': '100%'}} />
+                return <svg className='img' style={{'width': '100%', 'height': '100%', 'position': 'absolute', 'top': '0px', 'left': '0px'}} />
             }
           })(MESSAGE)}
         </div>

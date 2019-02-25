@@ -3,3 +3,47 @@
 	stroke: red;
 	stroke-width: 5px;
 }
+.img-background {
+	opacity: 0.2;
+}
+.is-hidden {
+	display: none;
+}
+.circle-point {
+	r: 10px;
+	fill: white;
+	stroke: red;
+}
+.path-timeline {
+	stroke: #aaa;
+	stroke-width: 5px;
+}
+.markerTriangle {
+	fill: #aaa;
+	stroke: none;
+}
+.circle-point.current {
+	r: 15px;
+	fill: red;
+}
+.text-sentence {
+	text-anchor: middle;
+	font-size: 2rem;
+}
+.div-wrap {
+	width: 100%;
+  display: flex;
+  padding: 5px;
+  font-size: 2rem;
+  background: white;
+}
+.div-center {
+	margin: auto;
+	padding-left: 10px;
+	padding-right: 10px;
+	box-shadow: 0 0.5rem 1rem rgba(0,0,0,.15);
+  border-radius: .25rem;
+}
+.content {
+	padding: 5px;
+}

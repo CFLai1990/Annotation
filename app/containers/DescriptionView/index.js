@@ -20,6 +20,9 @@ import View from 'components/View/index'
 import MsgBox from 'components/MsgBox'
 import Flex from 'components/Flex/index'
 import emitter from '../../utils/events'
+import ClientIO from 'utils/annotation/csocketio.js'
+import MSocket from 'utils/annotation/msgsocket.js'
+
 const DspDiv = Flex.Box.extend`
     width: ${props =>
         Flex.width(props.size, props.margin, props.parentSize)}vw;
@@ -40,6 +43,8 @@ DspDiv.defaultProps = {
 
 const msg = new MsgBox('DESCRIPTION_VIEW')
 // const annyang = window.annyang
+const MESSAGE = 'NLP'
+const MACHINE = 'dl'
 
 class DescriptionView extends React.PureComponent {
   // eslint-disable-line react/prefer-stateless-function
@@ -50,10 +55,31 @@ class DescriptionView extends React.PureComponent {
     this.state = {
       valueText: ''
     }
+    this.initSocket()
+
   }
   handleSubmit (message) {
-    console.log('handleSubmit', message)
-    emitter.emit('commitDiscription', message);
+    console.log('DescriptionView handleSubmit', message)
+    emitter.emit('doneDescription', message);
+  }
+  initSocket () {
+    /* message:
+      'NLP': get the nlp result of the text
+    */
+    const MESSAGE = 'NLP'
+    const MACHINE = 'dl'
+    // const VERSION = 'dev'
+    const VERSION = 'public'
+    this.socket = new ClientIO({
+      'address': MACHINE,
+      'port': VERSION === 'dev' ? 2018 : 2019,
+      'namespace': 'api/annotation'
+    })
+    this.msocket = new MSocket(this.socket, MESSAGE)
+    this.socket.on('connect', () => {
+      // add more callbacks if necessary
+      this.msocket.onConnect()
+    })
   }
   handleChange (event) {
     // console.log('event', event)
@@ -99,14 +125,34 @@ class DescriptionView extends React.PureComponent {
           // Start listening. You can call this here, or attach this call to an event, button, etc.
           annyang.start()
         } */
+    this.eventEmitter = emitter.addListener('doneNLP', (message) => {
+      console.log('DescriptionView eventEmitter', message)
+      console.log('this.fsocket', this.fsocket)
+
+      if (this.msocket.data) {
+        // if (message.search(/dog/i) >=0) {
+        //   console.log('this.fsocket.handleShow dog')
+        //   this.fsocket.handleShow('dog')
+        // } else if (message.search(/cat/i) >= 0) {
+        //   console.log('this.fsocket.handleShow cat')
+        //   this.fsocket.handleShow('cat')
+        // }
+        this.handleSubmit (message)
+
+      } else {
+        alert('NLP error!')
+      }
+      
+    })
   }
 
   render () {
     return (
       <DspDiv parentSize={this.props.parentSize} {...this.props.inner} id='nlptest' > 
         <h1>Please input a description:</h1>
-          <textarea className='content' style={{'width': '100%', 'height': '50%', 'border': '1px #aaa solid'}} value={this.state.valueText} onChange={this.handleChange.bind(this)} />
-        <button type="button" className="btn btn-primary" onClick={this.handleSubmit.bind(this, this.state.valueText)}>OK</button>
+          <textarea id="nlptest-input" className='content' style={{'width': '100%', 'height': '50%', 'border': '1px #aaa solid'}} value={this.state.valueText} onChange={this.handleChange.bind(this)} />
+        {/* <button type="button" id="nlptest-submit" className="btn btn-primary" onClick={this.handleSubmit.bind(this, this.state.valueText)}>OK</button> */}
+        <button type="button" id="nlptest-submit" className="btn btn-primary">OK</button>
 
       </DspDiv>)
   }

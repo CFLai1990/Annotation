@@ -70,6 +70,45 @@ class FSocket {
     this.iview.showObjAuto(message)
     this.iview.show()
   }
+  handleShowSentences (message=null) {
+    // let sentences = {
+    //     'st_1': 'The green car belongs to Mr. Lee.',
+    //     'st_2': 'There are many red cars.'
+    //   }
+    // let entities = {
+    //   'et_1': {
+    //     'name': 'car',
+    //     'sentence': 'st_1',
+    //     'shape': {
+    //       'car': true
+    //     },
+    //     'color': {
+    //       'green': true
+    //     },
+    //     'boundary': {
+    //       'stroke': false
+    //     }
+    //   },
+    //   'et_2': {
+    //     'name': 'car',
+    //     'sentence': 'st_2',
+    //     'shape': {
+    //       'car': true
+    //     },
+    //     'color': {
+    //       'red': true
+    //     },
+    //     'boundary': {
+    //       'stroke': false
+    //     }
+    //   }
+    // }
+    let entities = message.entities
+    let sentences = message.sentences
+    this.iview.showSentences(sentences, entities)
+    this.iview.show()
+
+  }
 }
 
 export default FSocket
