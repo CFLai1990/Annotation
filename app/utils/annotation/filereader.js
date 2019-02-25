@@ -42,6 +42,8 @@ class FRead {
       this.readFailure()
       ecb()
     }
+    // console.log('......', this.fread)
+
   }
 }
 

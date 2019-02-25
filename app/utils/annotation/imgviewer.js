@@ -287,41 +287,45 @@ class ImgViewer {
     gRoot.select('.gText #text-sentence .content').html(config.text)
     let gPath = gRoot.append('g').attr('class', 'gPath')
     let gClipPath =gRoot.append('g').attr('class', 'gClipPath').append('defs')
-    config.target.forEach(objectIndexArr => {
-      objectIndexArr.forEach(index => {
-        let target = this.imgResult[index]['mask'][0]
-        // this.imgResult[index] = {
-        //   'bbox': {'x': 810.78759765625, 'y': 387.4099426269531, 'width': 206.381591796875, 'height': 153.94271850585938},
-        //   'class': 'car',
-        //   'color': {'black': 0.2817, 'gray': 0.1314, 'white': 0.04, 'yellow': 0.0374, 'green': 0.4958},
-        //   'mask': [[[0, 0], [0, 0]]],
-        //   'score': 0.9613808989524841,
-        // }
-        let path = 'M'
-        path += target.map(d => '' + d.join(' ')).join('L')
-        path += 'Z'
-        // console.log('path', path)
-        gPath.append('path').attr('class', 'mask-path index-' + index).attr('d', path)
-          .style('display', 'none')
-        let polygonPoints = target.map(d => '' + d.join(' ')).join(' ')
-        gClipPath.append('clipPath').attr('id', 'index-'+index)//.attr('clipPathUnits', 'objectBoundingBox')
-          .append('polygon').attr('points', polygonPoints)
-      })
-    })
-
     let gImage = d3.select(`${this.id} .img .gRoot .gImage`)
-    // 只显示某个区域
-    // 多个clipPath
-    d3.selectAll('.img-background').remove()
-    gImage.clone(true).attr('class', 'img-background') //.lower()
-    d3.selectAll('.img-foreground').remove()
-    config.target.forEach(objectIndexArr => {
-      objectIndexArr.forEach(index => {
-        gRoot.selectAll('.mask-path.index-' + index).style('display', '')
-        gImage.clone(true).attr('class', 'img-foreground').style('clip-path', 'url(#index-' + index + ')')
+    if (config.target.length > 0) {
+      config.target.forEach(objectIndexArr => {
+        objectIndexArr.forEach(index => {
+          let target = this.imgResult[index]['mask'][0]
+          // this.imgResult[index] = {
+          //   'bbox': {'x': 810.78759765625, 'y': 387.4099426269531, 'width': 206.381591796875, 'height': 153.94271850585938},
+          //   'class': 'car',
+          //   'color': {'black': 0.2817, 'gray': 0.1314, 'white': 0.04, 'yellow': 0.0374, 'green': 0.4958},
+          //   'mask': [[[0, 0], [0, 0]]],
+          //   'score': 0.9613808989524841,
+          // }
+          let path = 'M'
+          path += target.map(d => '' + d.join(' ')).join('L')
+          path += 'Z'
+          // console.log('path', path)
+          gPath.append('path').attr('class', 'mask-path index-' + index).attr('d', path)
+            .style('display', 'none')
+          let polygonPoints = target.map(d => '' + d.join(' ')).join(' ')
+          gClipPath.append('clipPath').attr('id', 'index-'+index)//.attr('clipPathUnits', 'objectBoundingBox')
+            .append('polygon').attr('points', polygonPoints)
+        })
       })
-    })
-    gImage.classed('is-hidden', true)
+
+      // 只显示某个区域
+      // 多个clipPath
+      d3.selectAll('.img-background').remove()
+      gImage.clone(true).attr('class', 'img-background') //.lower()
+      d3.selectAll('.img-foreground').remove()
+      config.target.forEach(objectIndexArr => {
+        objectIndexArr.forEach(index => {
+          gRoot.selectAll('.mask-path.index-' + index).style('display', '')
+          gImage.clone(true).attr('class', 'img-foreground').style('clip-path', 'url(#index-' + index + ')')
+        })
+      })
+      gImage.classed('is-hidden', true)
+    } else {
+      gImage.classed('is-hidden', false)
+    }
     // 添加趋势线
     d3.selectAll('.gPathTrend').remove()
     gRoot.append('g').attr('class', 'gPathTrend').append('path')
