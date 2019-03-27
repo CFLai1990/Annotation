@@ -22,24 +22,8 @@ import Flex from 'components/Flex/index'
 import emitter from '../../utils/events'
 import ClientIO from 'utils/annotation/csocketio.js'
 import MSocket from 'utils/annotation/msgsocket.js'
+import { Button } from 'element-react'
 
-const DspDiv = Flex.Box.extend`
-    width: ${props =>
-        Flex.width(props.size, props.margin, props.parentSize)}vw;
-    height: ${props =>
-        Flex.height(props.size, props.margin, props.parentSize)}vh;
-    min-width: ${props =>
-        Flex.minWidth(props.size, props.margin, props.parentSize)};
-    min-height: ${props =>
-        Flex.minHeight(props.size, props.margin, props.parentSize)};
-    background: ${props => props.background};
-    margin: ${props => props.margin.h + 'vh ' + props.margin.w + 'vw'};
-`
-DspDiv.defaultProps = {
-  parentSize: [0, 0], // The size of its parent node
-  size: { w: 90, h: 90 }, // The size ratio of the whole viewpoint
-  margin: { w: 0, h: 0 } // Margin of the viewpoint
-}
 
 const msg = new MsgBox('DESCRIPTION_VIEW')
 // const annyang = window.annyang
@@ -50,8 +34,6 @@ class DescriptionView extends React.PureComponent {
   // eslint-disable-line react/prefer-stateless-function
   constructor (props) {
     super(props)
-    let sizeRatio = props.inner.sizeRatio
-    props.inner.size = { w: sizeRatio.w * 100, h: sizeRatio.h * 100 }
     this.state = {
       valueText: ''
     }
@@ -63,6 +45,7 @@ class DescriptionView extends React.PureComponent {
     emitter.emit('doneDescription', message);
   }
   initSocket () {
+    let that = this
     /* message:
       'NLP': get the nlp result of the text
     */
@@ -79,6 +62,11 @@ class DescriptionView extends React.PureComponent {
     this.socket.on('connect', () => {
       // add more callbacks if necessary
       this.msocket.onConnect()
+    })
+    this.eventEmitter = emitter.addListener('doneOD', (message) => {
+      console.log('filesocket eventEmitter', message)
+      that.dataFromOD = message
+      that.msocket.sendDataFromOD(that.dataFromOD)
     })
   }
   handleChange (event) {
@@ -148,13 +136,17 @@ class DescriptionView extends React.PureComponent {
 
   render () {
     return (
-      <DspDiv parentSize={this.props.parentSize} {...this.props.inner} id='nlptest' > 
-        <h1>Please input a description:</h1>
-          <textarea id="nlptest-input" className='content' style={{'width': '100%', 'height': '50%', 'border': '1px #aaa solid'}} value={this.state.valueText} onChange={this.handleChange.bind(this)} />
-        {/* <button type="button" id="nlptest-submit" className="btn btn-primary" onClick={this.handleSubmit.bind(this, this.state.valueText)}>OK</button> */}
-        <button type="button" id="nlptest-submit" className="btn btn-primary">OK</button>
-
-      </DspDiv>)
+      <div id='nlptest' style={{'width': '100%', 'height': '100%', 'padding': '5%'}}>
+        <div style={{'width': '100%', 'height': '100%'}}>
+          <div className="my-3">
+            <h3>Please input a description:</h3>
+          </div>
+          <textarea id="nlptest-input" className='content my-3' style={{'width': '100%', 'height': '90%', 'border': '1px #ddd solid', 'fontSize': '1.5rem'}} value={this.state.valueText} onChange={this.handleChange.bind(this)} />
+            {/* <button type="button" id="nlptest-submit" className="btn btn-primary" onClick={this.handleSubmit.bind(this, this.state.valueText)}>OK</button> */}
+            {/* <button type="button" id="nlptest-submit" className="btn btn-primary">OK</button>*/}
+            {/*<Button type="primary" id="nlptest-submit">OK</Button>*/}
+        </div>
+      </div>)
   }
 }
 
@@ -162,6 +154,4 @@ const mapStateToProps = createSelector(makeSelectData(), dataBody => ({
   dataBody
 }))
 
-export default View.Decorator(
-  connect(mapStateToProps)(DescriptionView)
-)
+export default DescriptionView

@@ -1,4 +1,5 @@
 import $ from 'jquery'
+import emitter from '../../utils/events'
 
 class MsgUploader {
   constructor () {
@@ -15,6 +16,15 @@ class MsgUploader {
         if (msg === '') { msg = null }
         callback(msg)
       })
+
+      this.eventEmitter = emitter.addListener('submitDescription', (message) => {
+        console.log('HomePage eventEmitter', message)
+        let msg = $(this.input).val()
+        console.log('nlp msg:', msg)
+        if (msg === '') { msg = null }
+        callback(msg)
+    })
+
     } else {
       $(this.input).on(event, callback)
     }

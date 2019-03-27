@@ -1,0 +1,68 @@
+  
+Object Detection
+  - 手动生成的 demo 测试数据
+    对于那张饼图的 demo 图片 demo_pie.png（名字不能改），Object Detection 后台有手动生成一份完整的数据（新增了 label 检测结果）
+    但是要使用这张图做测试，必须将 Object Detection 服务器的消息改成“OD_Demo”
+    在这个消息底下，其他图片均无返回结果，只对该 demo 图片有效
+  - 新的 demo 饼图
+    数据的手动生成是用脚本实现的，因此如果 demo 饼图要改，也可以很快地生成新的人造数据
+  - 数据结构改动
+    Object Detection 服务器的返回值从原来的 [entities] 数组变为：
+        {
+            'data': [entities],
+            'auxiliary': [auxiliaries],
+            'tonlp': [nlp_data]
+        }
+    其中 'data' 一项即为以前服务器所返回的结果，其含义是 'data entities'，包含图中所有映射了实际数据的 visual elements
+    而 'auxiliary' 一项为 axes 与 legends 的检测结果，现在仍为空
+    OD_Mask 与 OD_Demo 模式底下返回值的结构是一样的，OD_Image 返回值不变
+  - Label 检测
+    在 [entities] 数组中，每个 data entity 新增了一个 'label' 属性，是一个数组，用来存放该 entity 相关联的所有 label
+    由于后台仍没有实际的 label 检测模块，这一属性只有在 OD_Demo 模式下才有返回值（手动生成），在 OD_Mask 模式底下为空数组
+  - 消息转发
+    另外，OD模块新增了一个返回值叫 'tonlp'，包含其专门发送给 NLP 模块的数据
+    接到返回值后，请立即将 'tonlp' 对应的内容（即 [nlp_data]）原封不动转发到 NLP 服务器的 'OD_Data' 消息底下
+
+NLP
+  - 接收 OD_Data 数据
+    NLP 服务器新增了一个 'OD_Data' 消息，专门用来接收 OD 服务器发过来的数据
+    返回值是 {state: [true/false], info: [string]}，在 console 打印出来即可，无需额外处理
+  - Label 检测
+    当在文本里提到了图中所存在的 label 时，会被 NLP 模块检测出来
+    目前只能实现原封不动的 label 检测（包含标点符号，如 '10%'），仍未实现具有同义词、缩略词置换（如 'CHN' 与 'China' 置换）功能的检测
+    考虑到文本作为图中 label 时可能是大写，而出现在描述中可能是小写，因此目前的检测对大小写不敏感
+    另外，允许 label 包含空格、下划线等特殊符号。因此，就目前来说，一个短语如 "tall males" 也可作为图中 label 出现
+  - 数据结构改动
+    NLP 服务器的返回值从原来的：
+        {
+            'sentences': sentences,
+            'entities': entities
+        }
+    变更为：
+        {
+            'sentences': sentences,
+            'entities': entities,
+            'labels': labels
+        }
+    其中新增的 'labels' 是一个和 'entities' 结构相似的对象，按句子来存储每一句话所出现的 labeled entities，如 'st_0'
+    不同的是，'st_0' 所对应的对象，其属性即是在这句话里出现过的 label 的原文，例如：
+      'st_0': {
+        'Huawei': {
+          'positions': [0, 25]
+        }
+      }
+    出现在 'positions' 里的数组，指的是字符串 'Huawei' 在这句话里出现的起始位置（按字母位置算）
+    如果出现多次，则会有多个位置值；未出现过的 label，不会在 'st_0' 里面出现
+  - 其他
+    目前的机制对于多个相同的 label 无法实现区分
+    这是因为 NLP 模块只知道有哪些 label，但没有实际的 label 在图中的位置数据
+    单单从用户描述中，也是无法区分多个相同 label 的
+    例如饼图中有多个 pie 具有相同的数值 '10%'，则用户只提到 '10%' 时，他/她可能是想要指出所有数值为 '10%' 的 pie
+    否则，用户会增加其他的 visual feature 来作进一步的区分
+    但是在 Object Detection 返回的 label 属性里，是区分了多个相同 label 的
+
+Annotation
+  - 基础 label 检测
+    原则上说，我们倾向于让用户先上传图片，后写描述
+    图片经过 Object Detection 模块后，会有 'tonlp' 数据经由前端发送到 NLP 模块
+    如果前端没有事先发送 'tonlp' 数据，则 NLP 不会识别任何图中出现过的 label，接下来要做的 axes、legends 等 visual mapping 也是同理

@@ -2,6 +2,7 @@ import FRead from './filereader.js'
 import FLoad from './fileuploader.js'
 import IView from './imgviewer.js'
 import Modal from './loading.js'
+import emitter from '../../utils/events'
 
 class FSocket {
   constructor (socket, message) {
@@ -53,6 +54,7 @@ class FSocket {
     this.socket.on(this.message, (data) => {
       that.result = data
       this.iview.getResult(data)
+      emitter.emit('doneOD', data['tonlp'])
       this.mdl.show(false)
     })
   }
@@ -103,9 +105,11 @@ class FSocket {
     //     }
     //   }
     // }
-    let entities = message.entities
-    let sentences = message.sentences
-    this.iview.showSentences(sentences, entities)
+    // let entities = message.entities
+    // let sentences = message.sentences
+    // this.iview.showSentences(sentences, entities)
+    this.iview.showSentences(message)
+    
     this.iview.show()
 
   }

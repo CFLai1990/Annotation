@@ -1,1 +1,39 @@
+git add * 
+git commit -am "animation, context fading --Zhixian Lin" --no-verify
+
+git status
+
 All the red cars belong to Mr. Lee. The blue car was bought last year. The gray car looks nice. One of my favorite cars is the brown car. My brother owns the yellow car.
+
+Shown on the left is a large red car which belongs to Mr. Lee.
+
+All the red cars belong to Mr. Lee. The red car on the left is more expensive. The blue car was bought last year. The gray car looks nice. One of my favorite cars is the brown car. My brother owns the yellow car. 
+
+The blue rectangles represent Samsung. The orange rectangles represent Apple. And the green rectangles represent Huawei.
+
+Samsung has the largest market share of mobile phones in 2017.
+
+
+This image shows the global sales of three top-selling mobile phone brands in the last five years.
+We can see that Samsung has always been the best-selling brand. In 2013, the sales of Samsung reached 450 million, which were almost three times as much as the sales of Apple. Even in the worst year, the sales of Samsung still remained above 300 million.
+As the second-ranked brand, Apple's sales rose steadily from 2013 to 2015. But after 2015, the sales of Apple were basically stable between 200 million and 250 million.
+Huawei, on the other hand, shows a rapidly growing trend in the last five years. The sales of Huawei in 2017 were almost as good as the sales of Apple in 2013. It suggests that Huawei may become a strong competitor to Apple in the mobile phone market in the near future.
+
+This image shows the global sales of three top-selling mobile phone brands in the last five years.
+We can see that Samsung has always been the best-selling brand. 
+As the second-ranked brand, Apple's sales rose steadily from 2013 to 2015, and were basically stable between 200 million and 250 million after 2015.
+Huawei, on the other hand, shows a rapidly growing trend in the last five years. It suggests that Huawei may become a strong competitor to Apple in the mobile phone market in the near future.
+
+
+In 2013, the sales of Samsung were good.
+In 2013, the sales of Samsung reached 450 million.
+The sales of Samsung reached 450 million.
+The sales of Samsung still remained above 300 million.
+But after 2015, the sales of Apple did not raise.
+But after 2015, the sales of Apple were basically stable between 200 million and 250 million.
+
+Over the five years, the average sales are 200 million.
+
+In 2013, there is a great difference in the sales among these three manufacturers.
+From year 2013 to 2014, there is a great difference in the sales among these three manufacturers, especially between Samsung and Huawei.
+In 2013, there is a great difference in the sales between Samsung and Huawei.

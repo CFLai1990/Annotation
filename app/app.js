@@ -45,6 +45,7 @@ import { translationMessages } from "./i18n";
 // Import CSS reset and Global Styles
 import "styles/external/fileinput.min.css"
 import "styles/external/jquery.loadingmodal.min.css"
+import "styles/element-theme-default/lib/index.css"
 import "./global-styles";
 import "styles/lzx.css"
 
@@ -53,6 +54,11 @@ import 'utils/annotation/libs/jquery.loadingmodal.js'
 import 'utils/annotation/libs/annyang.min.js'
 import '../node_modules/bootstrap-fileinput/js/fileinput.js'
 import '../node_modules/bootstrap-fileinput/themes/fas/theme.js'
+
+import 'styles/jquery-3.3.1.slim.min.js'
+import 'styles/popper.min.js'
+import 'styles/bootstrap.min.css'
+import 'styles/bootstrap.min.js'
 
 // Create redux store with history
 const initialState = {};

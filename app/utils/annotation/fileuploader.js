@@ -1,4 +1,6 @@
 import $ from 'jquery'
+import emitter from '../../utils/events'
+
 
 class FileUploader {
   constructor () {
@@ -15,6 +17,10 @@ class FileUploader {
       resizePreference: 'height',
       resizeImage: true
     }
+    this.eventEmitter = emitter.addListener('clearOD', (message) => {
+      console.log('HomePage eventEmitter', message)
+      this.init()
+    })
   }
   init () {
     $(this.id).fileinput(this.uploadOptions)

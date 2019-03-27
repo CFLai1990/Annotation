@@ -1,0 +1,56 @@
+{
+"sentences": [
+{
+  "id": "st_0",
+  "content": "This image shows the global sales of three top-selling mobile phone brands in the last five years.\n"
+},
+{
+  "id": "st_1",
+  "content": "We can see that Samsung has always been the best-selling brand."
+},
+{
+  "id": "st_2",
+  "content": "In 2013, the sales of Samsung reached 450 million, which were almost three times as much as the sales of Apple."
+},
+{
+  "id": "st_3",
+  "content": "Even in the worst year, the sales of Samsung still remained above 300 million.\n"
+},
+{
+  "id": "st_4",
+  "content": "As the second-ranked brand, Apple's sales rose steadily from 2013 to 2015."
+},
+{
+  "id": "st_5",
+  "content": "But after 2015, the sales of Apple were basically stable between 200 million and 250 million.\n"
+},
+{
+  "id": "st_6",
+  "content": "Huawei, on the other hand, shows a rapidly growing trend in the last five years."
+},
+{
+  "id": "st_7",
+  "content": "The sales of Huawei in 2017 were almost as good as the sales of Apple in 2013."
+},
+{
+  "id": "st_8",
+  "content": "It suggests that Huawei may become a strong competitor to Apple in the mobile phone market in the near future."
+}],
+"objects": [
+	[0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14],
+	[0, 3, 6, 9, 12],
+	[1, 0],
+	[0, 3, 6, 9, 12],
+	[1, 4, 7],
+	[10, 13],
+	[2, 5, 8, 11, 14],
+	[1, 14],
+	[1, 4, 7, 10, 13, 2, 5, 8, 11, 14]
+],
+"mainX1": 129,
+"mainX2": 1251,
+"mainY1": 104,
+"mainY2": 1066,
+"fontSize": "38px"
+}
+

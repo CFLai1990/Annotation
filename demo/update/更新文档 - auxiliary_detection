@@ -1,0 +1,168 @@
+NLP
+  - 新增与轴相关的描述检测
+    - 轴的格式
+      在图中，每个轴有三个要素：title, unit, tick values
+      - 标题与单位
+        其中标题与单位以 "title (unit)" 标示，title 与 unit 均可以是带空格的短语
+        但 unit 短句中只有名词属性的词会被识别，以防止错判如 'In Millions' 这种带介词的情形
+        title 则不受此限制
+        但建议无论是 title 还是 unit，尽量用单个或少量名词表示
+      - tick value
+        tick value 本身的形式不受限，但应该是名词、数词等词性
+        可以带一定的计量单位（UNIT），如 "$300" 表示 300 美元（但在此情况下，"美元" 则不应重复出现在 unit 中）
+        tick value 可以带数量单位（NUM），如 "300k" 表示 300,000
+        NUM 与 UNIT 的区分详见“轴的单位”
+    - 提及轴
+      提及轴的情形有3种：
+        1. 只提及轴的 title，如：'The sales of Huawei are better than the sales of Apple'.
+        2. 只提及轴的 tick value + unit
+        3. 两者一并提及
+      检测的返回数据结构形如：
+        entity_0: {
+          'axis': [
+            {
+              'title': 'Sales',
+              'unit': 'In Millions',
+              'ticks': [
+                {
+                  'values': ['250'],
+                  'relation': 'at',
+                  'sign': true
+                }
+              ]
+            }
+          ]
+        }
+      - 情况 1
+        由于无法基于 tick value 进行定位，返回值为空
+        但如果轴 A 的 title 和轴 B 的 tick value 被同时提及，如 'The sales of Huawei are better than the sales of Apple in 2015.'
+        则对于轴 A 会返回 ticks 为空数组，轴 B 则会完整返回相应的 tick value
+      - 情况 2
+        会完整返回所有数据，包括提到的 tick values
+        如 'Huawei sells well in 2015.'
+        特别地，如果另一个轴的 title 被提及，则这个轴无需 tick value 也会被返回
+      - 情况 3
+        会完整返回所有数据，包括提到的 tick values
+        如 'The sales of Huawei reach 250 million.'
+      总的来说，判断的时候需要根据 “ticks 数组是否为空”来判断“能否根据这个轴来进行定位”
+    - 提及轴的标题
+      - 标题的形式
+        轴的标题可以以任何形式出现，但建议用单个名词标识（短语情形如 "average temperature" 理论上能够识别，但尚未测试）
+        只提及标题而不提及 tick value，则由于无法进行定位，通常情况下不会有返回值
+      - 标题的附属
+        由于数轴常常代表特定事物的特定属性，在提及的时候往往会有固定的格式
+        标题本身并不会被返回为 entity；相应地，标题所附属的事物会成为 entity，例如：
+          'the sales of Huawei', 返回的 entity 名称是 'huawei' 而非 'sale'
+        现在所支持的 '标题 + 附属物' 的格式只有两种：
+          '[title] of [sth]' 如：'the sales of Huawei'
+          以及:
+          '[sth]'s [title]' 如：'Huawei's sales'
+        允许在 [sth] 里进行同时提及，如：
+          'the sales of Huawei and Apple'
+        但暂时不支持基于语义的、以及基于代词的情形，如：
+          'the sales of Huawei are better than those of Apple'
+          或：
+          'the sales of Huawei are better than Apple'
+          以上情形中，'sale' 轴都无法绑定到 'Apple' 上
+    - 提及轴的单位
+      轴的单位分两种：NUM 与 UNIT，前者如 thousand, million 等代表数字，后者如 meter, dollar 等代表计量单位
+      两种单位可以共存，但暂时不支持语义转换：
+        例如图中出现的是 tick value "$300"，则文本中只能识别出 "$300"，无法识别 "300 dollars"
+        同理，如果 tick value 是 "300k"，则无法识别 "300,000" 或 "300 thousands"
+      如果轴带单位，则描述任何一个 tick value 时必须带完整的单位描述，如：
+        单位是 "million dollars"，tick value 是 "300" 则只能识别完整的 "300 million dollars"
+      如果轴没有单位，则描述时无需带单位即可识别，如年份：
+        "... in 2014"
+      必须注意的是，如果轴的单位不全，则提及时无法进行识别，如图中写的是 "In Millions"，而描述是：
+        "The sales of Huawei reach 250 million dollars in 2015."
+        由于多出了一个计量单位 "dollar"，返回的 sale 轴无法识别该 tick value
+      简而言之，tick value + unit，多/少一分都不行
+    - 提及 tick value
+      - 关系
+        在语言描述里，visual element 与 tick value 之间的关系只有四种：'below', 'at', 'above' 和 'between'
+          例如 'before 2014' 和 'after 2014' 分别会被翻译为 'below 2014' 和 'above 2014'，
+        '动词 + 介词 + tick value' 的情形下，具体关系根据具体介词形式而定，如：
+          'go beyond 250 million' 会被翻译为 'above 250 million'
+        特别地，任何 '动词 + tick value' 的情形，其关系均视为 'at'，如：
+          'reach 250 million' 等价于 'at 250 million'
+        此外，允许使用 'more/less than', 'higher/lower than' 的描述，如：
+          'The sales of Huawei are higher than 250 million.'
+        与这四种关系等价的、完整的介词词典，可参考附件 'axis_dict.py' 中的 AXIS_FULL 字典
+      - 同时提及
+        一般情况下，ticks 数组中每个对象的 'values' 是一个单元素的数组，包含 tick value 的原文
+        特别地，如果关系为 'between'，则 'values' 会包含其两个边界的两个 tick values，如：
+          'The sales of Huawei are good between 2014 and 2016.' 返回的 'values' = ['2014', '2016']
+        此外，允许使用连词 and 来同时提及多个 tick values，如：
+          'The sales of Huawei are better than the sales of Apple in 2014, 2015 and 2016.'
+          在这种情况下，每个出现过的 tick value 都会成为 ticks 数组中的一个单独的对象
+        * 除了 'between' 与 'and' 以外，其他的同时提及，如 'from ... to ... '暂时不支持
+      - sign
+        在提及关系的时候，可以给描述加上否定词，如：
+          'Both the sales of Huawei and Apple are not higher than 250 million in 2014.'
+        特别地，否定词对于四种关系中的 'at' 是无效的
+          例如上述例句中，不但 '250 million' 会被加上 sign: false 标签，'2014' 也同理
+          但前者的关系是 'above'，而后者是 'at'
+        这是当前算法的其中一个 bug，因此建议尽可能用肯定语句来代替否定语句
+      - 同句覆盖
+        在同一句话中，如果多个 entity 都或多或少提到了某个轴的属性，则
+        （接上行）未提到某个轴的某个 entity，会从其他 entities 处复制该轴的属性到自身
+        举例来说：
+          'The sales of Huawei are better than the sales of Apple in 2015.'
+          这句话中，实际检测到的是：
+            Huawei 只提到了 sales 轴（the sales of Huawei）
+            Apple 则同时提到了 sales、year 轴 （the sales of Apple in 2015）
+          为避免歧义，会将 Apple 的 year 轴属性复制到 Huawei 身上
+        但如果两者均带有特定的轴，则不会作覆盖处理，如：
+          'The sales of Huawei in 2014 are better than the sales of Apple in 2015.'
+          其中：
+            Huawei 提到 sales 轴（仅标题）和 year 轴 （2014）
+            Apple 提到 sales 轴（仅标题）和 year 轴（2015）
+    - 例句
+      所有通过测试的例句，可参考附件 'axis.txt'
+      其中句末带有 '#S' 标记的，均为在相应的 OD_Data 底下，能够正常输出结果的描述
+  - 新增 color legend 的描述检测
+    当图中存在 color legend 时，NLP 模块会在每一句话里检测 color legend 对应的名称，并把相应的 color 赋给这个名称
+    如果特定的 legend 名称出现过，它表现在 entity 里是一个非空的 "legend" 属性，直接指向该 legend 名称，如：
+      entity_0:{
+        ...
+        "legend": "Samsung",
+        "color": {
+          "blue": true
+        }
+        ...
+      }
+  - 新增 shape 的描述检测
+    - shape 描述
+      当提到特定的 shape 时，这个 shape 必须是单独的名词，如：
+        "the red rectangle"
+      暂时不支持形容词形式的 shape 描述
+    - 返回数据
+      如果特定的 shape 被提到过，在返回的 entity 里面会有一个属性直接指向标准形状，如：
+        "shape": "rectangle"
+      其中标准形状会以 entity 类别名称的形式出现在 OD 模块的检测结果里
+    - 同义词库
+      系统所支持的 shape 的描述有个固定的词汇库，参见附件 shape_dict 里的 SHAPE_FULL 字典
+  - label 描述检测的变更
+    - label 描述
+      之前提到 data label 时，必须在文本中原原本本地写出整个 label
+      新增的功能可以支持短语形式的 label，同时支持大小写、形态各不相同的 label 描述
+    - 返回数据
+      新的返回数据不再独立分出一块 labels 来描述句子中提到的 label
+      相应地，如果句子中提到了某个 label，则某个 entity 会有 "label" 属性直接指向该 label 的原文，如：
+        entity_0:{
+          ...
+          "label": "Samsung",
+          ...
+        }
+
+
+Annotation
+  - axis-location matching
+    事实上，如果不知道图表类型的话，我们可能很难决定坐标轴与 visual element 之间应该是怎样的关系
+    在语言描述里，visual element 与 tick value 之间的关系只有四种：'below', 'at', 'above' 和 'between'
+    但在实际视图里需要具体问题具体分析，例如：
+      - 在直方图里面，与纵轴相关的是直方的高度，但与横轴相关的是直方的位置
+      - 在散点图里面，与横纵轴相关的都是点的位置
+  - auxiliary 数据结构改动
+    每个 axis 和 legend 都只允许有一个 label（可以是一个带空格的短语），因此其 "label" 属性是一条文本
+    而每个 data entity 可以同时拥有多个 label，因此其 "label" 属性仍然是一个包含多条文本的数组

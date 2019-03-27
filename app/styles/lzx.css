@@ -1,49 +1,185 @@
 .mask-path {
 	fill: transparent;
-	stroke: red;
+	stroke: #555;
 	stroke-width: 5px;
+	transition: all 1s;
+	stroke-linecap: round;
+  stroke-linejoin: round;
 }
 .img-background {
-	opacity: 0.2;
+	opacity: 0.1;
+	transition: all 1s;
+}
+.img-background.is-visible {
+	opacity: 1;
+	transition: all 1s;
 }
 .is-hidden {
-	display: none;
+	/*display: none;*/
+	opacity: 0!important;
+	transition: all 1s;
+}
+.is-fade {
+	opacity: 0.1!important;
+	transition: all 1s;
 }
 .circle-point {
 	r: 10px;
-	fill: white;
-	stroke: red;
-}
-.path-timeline {
-	stroke: #aaa;
-	stroke-width: 5px;
-}
-.markerTriangle {
-	fill: #aaa;
+	/*fill: white;*/
+	/*stroke: red;*/
+	fill: #fc9272;
 	stroke: none;
+	transition: all 0.5s;
 }
 .circle-point.current {
 	r: 15px;
-	fill: red;
+	/*fill: red;*/
+	fill: #de2d26;
+	transition: all 0.5s;
 }
-.text-sentence {
-	text-anchor: middle;
-	font-size: 2rem;
+.path-timeline {
+	/*stroke: #aaa;*/
+	stroke: #fc9272;
+	stroke-width: 5px;
 }
-.div-wrap {
+.markerTriangle {
+	/*fill: #aaa;*/
+	fill: #fc9272;
+	stroke: none;
+}
+
+.div-wrap, .div-wrap-ruler {
 	width: 100%;
   display: flex;
   padding: 5px;
   font-size: 2rem;
   background: white;
+  background: transparent;
+  transform: translateX(-50%) translateY(-50%);
+  /*max-width: 400px;*/
 }
-.div-center {
+.div-center, .div-center-ruler {
 	margin: auto;
 	padding-left: 10px;
 	padding-right: 10px;
-	box-shadow: 0 0.5rem 1rem rgba(0,0,0,.15);
   border-radius: .25rem;
+	/*box-shadow: 0 0.5rem 1rem rgba(0,0,0,.15);*/
+  box-shadow: 0 1px 6px 0 rgba(32,33,36,0.28);
+  border-color: rgba(223,225,229,0);
+  background: white;
 }
 .content {
 	padding: 5px;
+}
+.gPathConnect path {
+	stroke: #555;
+	stroke-width: 2px;
+}
+.markerTrianglePathConnect {
+	fill: #555;
+	stroke: none;
+}
+.text-sentence, .text-sentence-ruler {
+	text-anchor: middle;
+	font-size: 2rem;
+	font-size: 50px;
+}
+
+.div-wrap-ruler {
+	visibility: hidden;
+}
+
+.main-container {
+	display: flex;
+	flex-direction: row;
+	height: 100%;
+	flex-grow: 1;
+	/*padding:  20px;*/
+}
+
+.input-group-btn.input-group-append {
+	min-width: max-content;
+}
+
+.el-card__body {
+	height: 100%;
+}
+/*
+.card4description .el-card__body {
+	height: inherit;
+}*/
+
+.el-col {
+	transition: all 1s;
+}
+.is-transition {
+	transition: all 1s;
+}
+
+#ruler2
+{
+	position: absolute;
+	visibility: hidden;
+	height: auto;
+	width: auto;
+	white-space: nowrap; /* Thanks to Herb Caudill comment */
+}
+
+@keyframes blink { 
+   50% { 
+   	/*border-color: #000000;*/
+   	/*stroke: transparent;*/
+   	opacity: 0;
+   } 
+}
+.flicker { /*or other element you want*/
+    animation-name: blink ;
+    animation-duration: .45s ;
+    animation-timing-function: step-end ;
+    animation-iteration-count: infinite ;
+    animation-direction: alternate ;
+    /*animation: blink .5s step-end infinite alternate;*/
+    stroke-linejoin: round;
+    opacity: 0.5;
+    stroke: gray;
+    stroke-width: 20px;
+}
+
+.rectRange {
+	/*opacity: 0.2;*/
+	/*fill: #ffc107;*/
+	/*fill: #555;*/
+	fill: rgba(0, 0, 0, 0.2);
+}
+.lineTickValue {
+	stroke: #6c757d;
+}
+.index-sentence-active {
+	color: #e6550d;
+	/*font-weight: bold;*/
+}
+
+.my-scroll {
+
+}
+
+/* width */
+::-webkit-scrollbar {
+/*  width: 8px;
+  height: 8px;*/
+
+  width: 0px;
+  height: 0px;
+}
+
+/* Track */
+::-webkit-scrollbar-track {
+  /*box-shadow: inset 0 0 5px grey; */
+  border-radius: 10px;
+}
+
+/* Handle */
+::-webkit-scrollbar-thumb {
+  background: rgba(0,0,0,0.3); 
+  border-radius: 10px;
 }

@@ -1,0 +1,80 @@
+Case 1: [entities] [be] [tick]
+  The GDP of Beijing is 10 million dollars.
+
+Case 2: [entities] [be] [prep] [tick]
+  The GDP of Beijing is below 10 million dollars.
+
+Case 3: [entities] [be] [prep] [than] [tick]
+  The GDP of Beijing is lower than 10 million dollars.
+
+Case 4: [entities] [verb] [prep] [than] [tick]
+  Beijing's temperature remains lower than 10 degrees
+
+Case 5: [entities] [verb] [prep] [tick]
+  Beijing's temperature drops below 10 degrees.
+
+Case 6: [entities] [prep] [tick]
+  The red dress above $450 is good.
+
+The sales of Huawei reach 250 in 2015. #S
+In 2015, the sales of Huawei reach 250. #S
+The sales of Huawei reach 250 dollars in 2015. #S
+In 2015, the sales of Huawei reach 250 dollars. #S
+The sales of Huawei reach 250 million in 2015. #S
+In 2015, the sales of Huawei reach 250 million. #S
+The sales of Huawei reach 250 million dollars in 2015. #S
+In 2015, the sales of Huawei reach 250 million dollars. #S
+
+Huawei's sales reach 250 in 2015. #S
+In 2015, Huawei's sales reach 250. #S
+Huawei's sales reach 250 dollars in 2015. #S
+In 2015, Huawei's sales reach 250 dollars. #S
+Huawei's sales reach 250 million in 2015. #S
+In 2015, Huawei's sales reach 250 million. #S
+Huawei's sales reach 250 million dollars in 2015. #S
+In 2015, Huawei's sales reach 250 million dollars. #S
+
+The sales of Huawei are higher than 250 in 2015. #S
+In 2015, the sales of Huawei are higher than 250. #S
+The sales of Huawei are higher than 250 dollars in 2015. #S
+In 2015, the sales of Huawei are higher than 250 dollars. #S
+The sales of Huawei are higher than 250 million in 2015. #S
+In 2015, the sales of Huawei are higher than 250 million. #S
+The sales of Huawei are higher than 250 million dollars in 2015. #S
+In 2015, the sales of Huawei are higher than 250 million dollars. #S
+
+Huawei's sales are higher than 250 in 2015. #S
+In 2015, Huawei's sales are higher than 250. #S
+Huawei's sales are higher than 250 dollars in 2015. #S
+In 2015, Huawei's sales are higher than 250 dollars. #S
+Huawei's sales are higher than 250 million in 2015. #S
+In 2015, Huawei's sales are higher than 250 million. #S
+Huawei's sales are higher than 250 million dollars in 2015. #S
+In 2015, Huawei's sales are higher than 250 million dollars. #S
+
+The sales of Huawei are more than 250 in 2015. #S
+In 2015, the sales of Huawei are more than 250. #S
+The sales of Huawei are more than 250 dollars in 2015. #S
+In 2015, the sales of Huawei are more than 250 dollars. #S
+The sales of Huawei are more than 250 million in 2015. #S
+In 2015, the sales of Huawei are more than 250 million. #S
+The sales of Huawei are more than 250 million dollars in 2015. #S
+In 2015, the sales of Huawei are more than 250 million dollars. #S
+
+Huawei's sales are more than 250 in 2015. #S
+In 2015, Huawei's sales are more than 250. #S
+Huawei's sales are more than 250 dollars in 2015. #S
+In 2015, Huawei's sales are more than 250 dollars. #S
+Huawei's sales are more than 250 million in 2015. #S
+In 2015, Huawei's sales are more than 250 million. #S
+Huawei's sales are more than 250 million dollars in 2015. #S
+In 2015, Huawei's sales are more than 250 million dollars. #S
+
+The sales of Huawei are better than the sales of Apple in 2015. #S
+In 2015, the sales of Huawei are better than the sales of Apple. #S
+The sales of Huawei in 2014 are better than the sales of Apple in 2015. #S
+Both the sales of Huawei and Apple are not higher than 250 million in 2014. #S
+
+The sales of Huawei at 250 million is higher than the sales of Apple at 150 million in 2015. #S
+The sales of Huawei are better than the sales of Apple in 2014, 2015 and 2016. #S
+The sales of Huawei are better than the sales of Apple between 2014 and 2016. #S

@@ -1,0 +1,38 @@
+nlp之后config应该结束再进入绘制，不然很卡。可能是console?
+背景一直不亮。+
+步骤改成英文。+
+时间轴的风格，（加左右键）+
+div挪动而不是冒出来。
+只提到轴的时候，亮一条。一样是7种 (-nlp还不行+)
+轴的辅助线 (+)
+暗掉
+
+=====
+文字大小因为图片大小而变，因为viewbox
+
+
+imgviewer 822
+
+
+css depth of field
+svg复制，前一个做背景 filter: blur(5px); 只显示main内部的
+https://css3playground.com/blur-filter/
+
+
+img.desaturate {
+	filter: grayscale(100%);
+}
+http://thenewcode.com/532/Convert-Images-To-Black-And-White-With-CSS
+
+brightness
+filter: brightness(25%);
+
+闪烁、转动等
+animation: backgroundblur 5s infinite;
+@keyframes backgroundblur {
+    0%, 100%  { filter: blur(5px); }
+    50%       { filter: blur(0px); }
+}
+https://codepen.io/noahbres/pen/wzBKRv
+
+stroke背景找一下在文件注释里

@@ -30,12 +30,22 @@ class MSocket {
     this.socket.on(this.message, (data) => {
       console.info('msgsocket handleReceive', data)
       this.mdl.show(false)
-      emitter.emit('doneNLP', data);
+      emitter.emit('doneNLP', data)
     })
   }
   onConnect () {
     this.handleUpload()
     this.handleReceive()
+  }
+  sendDataFromOD (dataFromOD) {
+    this.socket.on('OD_Data', (data) => {
+      console.info('msgsocket handleReceiveDataFromOD', data)
+      this.mdl.show(false)
+    })
+    this.socket.emit('OD_Data', dataFromOD)
+    console.info(`Message of 'OD_Data' sent!`)
+    this.mdl.show(true, 'Uploading image information to NLP server...')
+
   }
 }
 
