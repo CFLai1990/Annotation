@@ -13,7 +13,8 @@ class MsgUploader {
       $(this.submit).on('click', () => {
         let msg = $(this.input).val()
         console.log('nlp msg:', msg)
-        if (msg === '') { msg = null }
+        // if (msg === '') { msg = null }
+        if (msg === '') { msg = ' ' }
         callback(msg)
       })
 
@@ -21,7 +22,8 @@ class MsgUploader {
         console.log('HomePage eventEmitter', message)
         let msg = $(this.input).val()
         console.log('nlp msg:', msg)
-        if (msg === '') { msg = null }
+        // if (msg === '') { msg = null }
+        if (msg === '') { msg = ' ' }
         callback(msg)
     })
 

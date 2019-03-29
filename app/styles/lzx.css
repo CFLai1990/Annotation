@@ -6,6 +6,11 @@
 	stroke-linecap: round;
   stroke-linejoin: round;
 }
+.stroke-background {
+	fill: transparent;
+	fill: white;
+
+}
 .img-background {
 	opacity: 0.1;
 	transition: all 1s;
@@ -182,4 +187,62 @@
 ::-webkit-scrollbar-thumb {
   background: rgba(0,0,0,0.3); 
   border-radius: 10px;
+}
+
+.mask-path-context {
+	display: none;
+}
+
+#svg-img-context {
+	transition: all 1s;
+}
+
+.context-transparency {
+	opacity: 0.1;
+}
+
+.context-desaturate {
+	filter: grayscale(100%);
+}
+
+.context-brightness {
+	filter: brightness(25%);
+}
+
+.context-depth-of-field {
+	filter: blur(10px);
+	opacity: 0.8;
+}
+
+.inside-menu {
+	padding: 5px;
+	font-size: 1.5rem;
+	background: white;
+}
+.list-sentence li {
+	padding: 5px;
+	border-bottom: solid 1px #ddd;
+}
+.el-menu-vertical-demo .el-submenu.is-opened:first-child .collapse-transition {
+  overflow: visible !important;
+}
+
+.el-menu-vertical-demo {
+	display: flex;
+	flex-direction: column;
+
+}
+
+.el-submenu:last-child {
+	overflow: auto;
+  display: flex;
+  flex-direction: column;
+}
+
+.el-menu-vertical-demo .el-submenu:last-child .collapse-transition {
+  overflow: auto !important;
+}
+
+.inline-element {
+	display: inline-block;
 }

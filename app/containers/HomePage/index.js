@@ -18,7 +18,7 @@ import { Page, Header, Body, Row, Col } from 'components/Page/index'
 import ImageView from 'containers/ImageView/Loadable'
 import DescriptionView from 'containers/DescriptionView/Loadable'
 
-import { Layout, Steps, Menu, Upload, Tag, Collapse, Switch, Form, Input,ColorPicker } from 'element-react'
+import { Layout, Steps, Menu, Upload, Tag, Collapse, Switch, Form, Input,ColorPicker, Select } from 'element-react'
 import { Button } from 'element-react'
 import { Card } from 'element-react'
 import { Icon } from 'element-react'
@@ -30,6 +30,11 @@ class HomePageBody extends React.PureComponent {
   constructor (props) {
     super(props)
     this.state = {
+      form: null,
+      contextMode: 'context-transparency',
+      overlayColor: 'rgba(0, 0, 0, 0.2)',
+      borderShow: false,
+      borderColor: 'rgba(0, 0, 0, 0.5)',
       active: 1,
       spanImage: 22,
       spanDescription: 10,
@@ -37,6 +42,22 @@ class HomePageBody extends React.PureComponent {
       isImageUploaded: false,
       valueContextFade: true
     }
+    this.optionsImageContext = [{
+      value: 'context-transparency',
+      label: 'Transparency'
+    }, {
+      value: 'context-desaturate',
+      label: 'Desaturate'
+    }, {
+      value: 'context-brightness',
+      label: 'Brightness'
+    }, {
+      value: 'context-depth-of-field',
+      label: 'Depth of field'
+    }, {
+      value: 'context-none',
+      label: 'No fading effect'
+    }],
     this.View_Dsp = {
       sizeRatio: {w: 0.9, h: 0.9}
     }
@@ -108,8 +129,11 @@ class HomePageBody extends React.PureComponent {
     }
     this.setState({ 'active': active});
   }
+  onSubmit(e) {
+    e.preventDefault();
+  }
   render () {
-    let DOM = this.sentenceProcessed.map((item, index) => (<li key={index} className={'index-sentence-' + index} onClick={() => this.clickSentence(index)}>{item}</li>))
+    let DOM = this.sentenceProcessed.map((item, index) => (<li key={index} className={'index-sentence-' + index} onClick={() => this.clickSentence(index)}>{(index+1) + '. ' + item}</li>))
     return (
       <Row size={{'w': '100', 'h': '100'}}>
       <div style={{'width': '100%', 'height': '100%', 'display': 'flex', 'flexDirection': 'column', 'flexGrow': '1', 'border': '1px #aaa solid', 'overflow': 'hidden'}}>
@@ -131,30 +155,104 @@ class HomePageBody extends React.PureComponent {
         <div className="main-container">
           <Layout.Row style={{'width': '100%', 'height': '100%'}}>
           <Layout.Col span={ 4 } offset={ 0 } style={{'position': 'absolute', 'height': '90%'}}>
-              <Card className="is-transition" bodyStyle={{ padding: 0 }} style={{'width': '100%', 'height': '100%', 'transform': ((this.state.spanSetting===1)?'translateX(-100%)': 'translateX(0%)')}}>
-                <div className="my-scroll" style={{'width': '100%', 'height': '100%', 'overflow': 'auto'}}>
+              <Card className="is-transition" bodyStyle={{ padding: 0 }} style={{'overflow': 'visible', 'width': '100%', 'height': '100%', 'transform': ((this.state.spanSetting===1)?'translateX(-100%)': '')}}>
+                <div className="my-scroll  d-flex flex-column" style={{'width': '100%', 'height': '100%'}}>
+                {/*<div style={{'max-height': '60%'}}>
+                  <Menu defaultActive="1" className="el-menu-vertical-demo">
+                    <Menu.SubMenu index="1" title={<span><i className="el-icon-message"></i>导航一</span>}>
+                      <div className="list-sentence inside-menu" style={{'overflow': 'auto'}}>
+                        {DOM}
+                      </div>
+                    </Menu.SubMenu>
+                  </Menu>
+                </div>
+                <div >
+                  <Menu defaultActive="1" className="el-menu-vertical-demo">
+                  <Menu.Item index="2"><i className="el-icon-setting"></i>导航二</Menu.Item>
+                  </Menu>
+                </div>
+                <div className="d-flex flex-column">
+                  <ColorPicker value='rgba(0, 0, 0, 0.2)' showAlpha></ColorPicker>
+                    
+                  <Select value={this.state.contextMode} onChange={(value)=>{console.log('contextMode', value)}}>
+                    {
+                      this.optionsImageContext.map(el => {
+                        return <Select.Option key={el.value} label={el.label} value={el.value} />
+                      })
+                    }
+                  </Select>
+                  <div style={{'overflow': 'auto'}}>
+                  </div>
+                  </div>*/}
+                  <Menu defaultOpeneds={["1", "2"]} className="el-menu-vertical-demo" model={this.state.form} labelWidth="80">
+                  <Menu.SubMenu style={{'overflow': 'visible'}} index="1" title={<span><i className="el-icon-setting"></i>Style Configuration</span>}>
+                      <div className="inside-menu" >
+                        <Form labelPosition='top' labelWidth="" model={this.state.form} onSubmit={(e)=>{e.preventDefault()}} className="demo-form-stacked">
+                          <Form.Item label="Context Fading">
+                            <Select value={this.state.contextMode} onChange={(value)=>{this.changeSetting('contextMode', value)}}>
+                              {
+                              this.optionsImageContext.map(el => {
+                                return <Select.Option key={el.value} label={el.label} value={el.value} />
+                              })
+                            }
+                            </Select>
+                          </Form.Item>
+                          <Form.Item label="Overlay Rectangle Color">
+                            <ColorPicker value={this.state.overlayColor} showAlpha onChange={(value)=>{this.changeSetting('overlayColor', value)}}></ColorPicker>
+                          </Form.Item>
+                          <Form.Item label="Show Border">
+                            <Switch
+                              value={this.state.borderShow}
+                              onValue={true}
+                              offValue={false}
+                              onChange={(value)=>{this.changeSetting('borderShow', value)}}
+                              >
+                            </Switch>
+                            <div className="inline-element mx-3" style={{'visibility': ((this.state.borderShow)?'':'hidden')}}>
+                              <ColorPicker value={this.state.borderColor} showAlpha onChange={(value)=>{this.changeSetting('borderColor', value)}}></ColorPicker>
+                            </div>
+                          </Form.Item>
+                        </Form>
+                      </div>
+                    </Menu.SubMenu>
+                    <Menu.SubMenu index="2" title={<span><i className="el-icon-information"></i>Sentences</span>}>
+                      <div className="list-sentence inside-menu" style={{'overflow': 'auto'}}>
+                        {DOM}
+                      </div>
+                    </Menu.SubMenu>
+                  
+        </Menu>
+                  </div>
                 {/* <Collapse value={['1', '2']}> */}
-                <Collapse value={'1'} accordion>
+                {/*<Collapse value={'1'} accordion>
                   <Collapse.Item title="Sentences" name="1">
                     {DOM}
                   </Collapse.Item>
                   <Collapse.Item title="Style Configuration" name="2">
                     <Form labelPosition='top' labelWidth="" model={this.state.form} className="demo-form-stacked">
-        <Form.Item label="Context Fading">
-          <Switch
-                      value={this.state.valueContextFade}
-                      onValue={true}
-                      offValue={false}
-                      onChange={(value)=>{this.changeSetting('valueContextFade', value)}}
-                      >
-                    </Switch>
-        </Form.Item>
-        <Form.Item label="Overlay Rectangle Color">
-          <ColorPicker value='rgba(0, 0, 0, 0.2)' showAlpha></ColorPicker>
-        </Form.Item>
-        <Form.Item label="活动展开形式">
-        </Form.Item>
-      </Form>
+                    <Form.Item label="Overlay Rectangle Color">
+                      <ColorPicker value='rgba(0, 0, 0, 0.2)' showAlpha></ColorPicker>
+                    </Form.Item>
+                      <Form.Item label="Context Fading">
+                        <Switch
+                          value={this.state.valueContextFade}
+                          onValue={true}
+                          offValue={false}
+                          onChange={(value)=>{this.changeSetting('valueContextFade', value)}}
+                          >
+                        </Switch>
+                        <Select value={this.state.contextMode} onChange={(value)=>{console.log('contextMode', value)}}>
+                          {
+                          this.optionsImageContext.map(el => {
+                            return <Select.Option key={el.value} label={el.label} value={el.value} />
+                          })
+                        }
+                        </Select>
+                      </Form.Item>
+
+                      <Form.Item label="活动展开形式">
+                      </Form.Item>
+                    </Form>
                     
                   </Collapse.Item>
                   <Collapse.Item title="效率 Efficiency" name="3">
@@ -166,8 +264,7 @@ class HomePageBody extends React.PureComponent {
                     <div>用户决策：根据场景可给予用户操作建议或安全提示，但不能代替用户进行决策；</div>
                     <div>结果可控：用户可以自由的进行操作，包括撤销、回退和终止当前操作等。</div>
                   </Collapse.Item>
-                </Collapse>
-                </div>
+                </Collapse>*/}
               </Card>
               <div style={{'position': 'absolute', 'left': '0%', 'top': '0%', 'transform': 'translateY(-100%)', 'fontSize': '2rem', 'display': (((this.state.spanImage===22 || this.state.spanImage===18)&&(this.state.isImageUploaded))? '':'none')}} onClick={()=>{this.switchSetting()}}>
                 <Tag type="gray"><i className={(this.state.spanSetting===1)?'el-icon-caret-right':'el-icon-caret-left'}></i></Tag>

@@ -12,6 +12,7 @@ window.d3 = d3
 class ImgViewer {
   constructor (message) {
     let that = this
+    this.configArr = []
     this.imgOriginal = null
     this.id = '#odresult'
     this.message = message
@@ -577,6 +578,28 @@ class ImgViewer {
     console.log('~~~~~~~~~~~~getContent color keys', keys, '\n', text, '\n', string)
     return string
   }
+  showContext(){
+    let that = this
+    d3.select(`${that.id}`).selectAll('#svg-img-context').remove()
+    // 复制一份用于当背景
+    let rootBackground = d3.select(`${that.id} .img`).clone(false).attr('id', 'svg-img-context').lower()
+    let el = rootBackground.append('g').attr('class', 'gImgContext')
+    let gImage = d3.select(`${this.id} .img .gRoot .gImage`)
+    let image = gImage.select('image').node().cloneNode()
+    let target = [[that.mainX1, that.mainY1], [that.mainX1, that.mainY2], [that.mainX2, that.mainY2], [that.mainX2, that.mainY1]]
+    let index = 0
+    let path = 'M'
+    path += target.map(d => '' + d.join(' ')).join('L')
+    path += 'Z'
+    let polygonPoints = target.map(d => '' + d.join(' ')).join(' ')
+    el.append('defs')
+      .append('clipPath').attr('id', 'index-context-' + index) //.attr('clipPathUnits', 'objectBoundingBox')
+      .append('polygon').attr('points', polygonPoints)
+    let gImageContext = el.append('g').attr('class', 'img-context')
+    gImageContext.style('clip-path', 'url(#index-context-' + index + ')')
+    gImageContext.node().appendChild(image)
+    let ePath = el.append('path').attr('class', 'mask-path-context index-context-' + index).attr('d', path)
+  }
   showSentences (message) {
     let that = this
     // The yellow cars are good. All the red cars belong to Mr. Lee.
@@ -622,6 +645,11 @@ class ImgViewer {
       let keySentence = sentence.id
       let tmp = {
         valueContextFade: true,
+        contextMode: 'context-transparency', // 'context-transparency', 'context-desaturate', 'context-brightness', 'context-depth-of-field'
+        overlayColor: 'rgba(0, 0, 0, 0.2)',
+        lineColor: 'rgba(108, 117, 125, 1)',
+        borderColor: 'rgba(0, 0, 0, 0.5)',
+        borderShow: false,
         transform: [],
         textDiv: {
           x: 0,
@@ -804,12 +832,15 @@ class ImgViewer {
     gPoint.append('circle').attr('class', (d, i) => ('circle-point index-' + i))
       .style('r', (rCircle) + 'px')
 
+
+    that.showContext()
+
     // 始终显示auxiliary部分，包括legend和axes
     that.showAuxiliary()
 
     // 添加背景blur的东西
     let filter = `<filter id="dropshadow" width="300%" height="300%">
-  <feGaussianBlur in="SourceAlpha" stdDeviation="5"/> <!-- stdDeviation is how much to blur -->
+  <feGaussianBlur in="SourceGraphic" stdDeviation="5"/> <!-- stdDeviation is how much to blur -->
   <feOffset dx="0" dy="0" result="offsetblur"/> <!-- how much to offset -->
   <feComponentTransfer>
     <feFuncA type="linear" slope="0.5"/> <!-- slope is the opacity of the shadow -->
@@ -819,6 +850,7 @@ class ImgViewer {
     <!-- <feMergeNode in="SourceGraphic"/> --> <!-- this contains the element that the filter is applied to -->
   </feMerge>
 </filter>`
+    gTimeline.append('defs').html(filter)
     // gRoot.select
 // <circle cx="170" cy="80" r="60" style="filter:url(#dropshadow)"/>
 
@@ -889,11 +921,12 @@ class ImgViewer {
         break
     }
   }
-  showRange(axis, gRoot) {
+  showRange(config, axis, gRoot) {
     // 同时在这个函数里面处理添加辅助线的功能吧。。。。
     let that = this
     let len = axis.length
     let tickLinesArr = []
+    let overlayColor = config.overlayColor // 'rgba(0, 0, 0, 0.2)'
     for(let i = 0; i< len; i++) {
       let d = axis[i]
       console.log('axis[i]', i, axis[i])
@@ -909,10 +942,16 @@ class ImgViewer {
             .style('opacity', 0)
           if (direction === 0) {
             gRect.append('rect').attr('class', 'rectRange')
-              .attr('x', range[0]).attr('y', that.mainY1)
-              .attr('width', range[1]-range[0]).attr('height', that.mainY2 - that.mainY1)
+              // .attr('x', range[0]).attr('y', that.mainY1)
+              .attr('x', range[0]).attr('y', that.mainY2)
+              // .attr('width', range[1]-range[0]).attr('height', that.mainY2 - that.mainY1)
+              .attr('width', range[1]-range[0]).attr('height', 0)
               .style('stroke-width', that.widthStroke)
               .style('stroke-dasharray', that.widthStroke * 2)
+              .style('fill', overlayColor)
+              .transition().duration(that.duration)
+              .attr('y', that.mainY1)
+              .attr('height', that.mainY2 - that.mainY1)
             gRect
               .style('opacity', 0)
               .transition().duration(that.duration)
@@ -921,9 +960,14 @@ class ImgViewer {
           } else {
             gRect.append('rect').attr('class', 'rectRange')
               .attr('x', that.mainX1).attr('y', range[0])
-              .attr('width', that.mainX2 - that.mainX1).attr('height', range[1]-range[0])
+              .attr('x', that.mainX1).attr('y', range[0])
+              // .attr('width', that.mainX2 - that.mainX1).attr('height', range[1]-range[0])
+              .attr('width', 0).attr('height', range[1]-range[0])
               .style('stroke-width', that.widthStroke)
               .style('stroke-dasharray', that.widthStroke * 2)
+              .style('fill', overlayColor)
+              .transition().duration(that.duration)
+              .attr('width', that.mainX2 - that.mainX1)
             gRect
               .style('opacity', 0)
               .transition().duration(that.duration)
@@ -945,6 +989,7 @@ class ImgViewer {
             .attr('d', dStringInit)
             .style('stroke-width', that.widthStroke * 0.25)
             .style('stroke-dasharray', that.widthStroke * 2)
+            .style('fill', config.lineColor)
             .transition().duration(that.duration)
             .attr('d', dString)
         }
@@ -955,31 +1000,42 @@ class ImgViewer {
     let that = this
     d3.selectAll('.gRectRange').remove()
     d3.selectAll('.lineTickValue').remove()
+    gImage.classed('is-hidden', true)
+    let svgImgContext = d3.select('#svg-img-context')
+    let borderOpacity = 0
+    let borderColor = config.borderColor
+    if (config.borderShow) {
+      borderOpacity = 1
+    }
     if (targetArr.length > 0) {
-      if (config.valueContextFade) {
-        gImage
-          .transition().duration(that.duration)
-          .style('opacity', 0.1)
-          // .classed('is-fade', true)
-      } else {
-        gImage
-          .transition().duration(that.duration)
-          .style('opacity', 1)
+      // if (config.valueContextFade) {
+      //   gImage
+      //     .transition().duration(that.duration)
+      //     .style('opacity', 0.1)
+      //     // .classed('is-fade', true)
+      // } else {
+      //   gImage
+      //     .transition().duration(that.duration)
+      //     .style('opacity', 1)
+      // }
+      if (config.contextMode) {
+        svgImgContext.attr('class', config.contextMode)
       }
       
       // 记得注释掉
       if (axis) {
         let axisFlat = axis.flat()
-        that.showRange(axisFlat, gRoot)
+        that.showRange(config, axisFlat, gRoot)
       }
     } else {
       // 没有entities
-      gImage
-        .transition().duration(that.duration)
-        .style('opacity', 1)
+      // gImage
+      //   .transition().duration(that.duration)
+      //   .style('opacity', 1)
         // .classed('is-fade', false)
+      svgImgContext.attr('class', '')
       if (axis) {
-        that.showRange(axis, gRoot)
+        that.showRange(config, axis, gRoot)
       }
     }
     let data = targetArr.flatten()
@@ -1014,24 +1070,29 @@ class ImgViewer {
         .style('opacity', 1)
       let ePath = el.append('path').attr('class', 'mask-path index-' + index).attr('d', path)
         .style('opacity', 0)
-        .style('stroke-width', that.widthStroke)
+        .style('stroke-width', that.widthStroke * 0.5 + 'px')
+      ePath.clone().lower()
+          .style('opacity', 0)
+          .style('stroke-width', that.widthStroke * 2 + 'px')
+          .style('filter', 'url(#dropshadow)')
+          .attr('class', 'stroke-background')
     })
     let gNodeUpdate = gNodeEnter.merge(gNode)
     gNodeUpdate.each(function(d) {
       let ePath = d3.select(this).select('.mask-path')
-      if (config.valueContextFade) {
-        ePath
-          .transition().duration(that.duration / 2)
-          .style('opacity', 0)
-      } else {
-        ePath
-          .transition().duration(that.duration / 2)
-          .style('opacity', 1)
-        ePath.clone().lower()
-          .style('opacity', 1)
-          .style('stroke-width', that.widthStroke * 2)
-          .attr('class', 'stroke-background')
-      }
+      ePath
+        .transition().duration(that.duration / 2)
+        .style('stroke', borderColor)
+        .style('opacity', borderOpacity)
+      d3.select(this).select('.stroke-background')
+        .transition().duration(that.duration / 2)
+        .style('stroke', ()=>{
+          let a = borderColor.split(',')
+          a.pop()
+          let b = a.join(', ')
+          return  (b + ', 1)')
+        })
+        .style('opacity', borderOpacity)
     })
 
   }
