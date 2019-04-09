@@ -6,6 +6,7 @@ import $ from 'jquery'
 import * as d3 from 'd3'
 import 'utils/font_size.js'
 import emitter from '../../utils/events'
+import setTextPosition from '../../utils/annotation/an_box.js'
 
 console.log('window', window)
 window.d3 = d3
@@ -22,7 +23,8 @@ class ImgViewer {
     this.keysObj = {}
     this.heightImage = 0
     this.widthImage = 0
-    this.heightText = 100
+    this.widthMax = 0
+    this.heightText = 0 // 100
     this.heightTimeline = 60
     this.duration = 800
     this.lengthConfigArr = null
@@ -88,54 +90,8 @@ class ImgViewer {
       case 'OD_Demo':
         console.warn('After:', img)
         d3.select(`${that.id} .img`).html('')
-        var i = new Image()
-        i.onload = function () {
-          console.warn(i.width + ', ' + i.height)
-          let div = d3.select(`${that.id}`).node()
-          that.widthDiv = div.clientWidth
-          that.heightDiv = div.clientHeight
-          that.heightTimeline = that.heightDiv / 10
-          that.heightText = that.heightDiv / 5
-          let heightTimeline = that.heightTimeline
-          let heightText = that.heightText
-          that.widthImage = i.width
-          that.heightImage = i.height
-          console.log('%cwidthImage, heightImage', 'color: green', that.widthImage, that.heightImage, that.heightTimeline, that.heightText, that)
-          // d3.select(`${that.id} .img`).attr('viewBox', '0, -' + that.heightText + ',' + i.width + ',' + (i.height + that.heightTimeline + that.heightText))  
-          d3.select(`${that.id} .img`).attr('viewBox', '0, 0, ' + i.width + ',' + (i.height + that.heightTimeline + that.heightText))
-          
-          let gRoot = d3.select(`${that.id} .img .gRoot`)
-          // this.gRoot = gRoot
-          gRoot.selectAll('.gTimeline').remove()
-          // let gTimeline = gRoot.append('g').attr('class', 'gTimeline').style('transform', 'translate(' + (that.widthImage * 0.5) + 'px, ' + (that.heightImage + that.heightTimeline * 0.5) + 'px)')
-          let gTimeline = gRoot.append('g').attr('class', 'gTimeline')
-            .style('transform', 'translate(' + (that.widthImage * 0.5) + 'px, ' + (that.heightImage + that.heightText + that.heightTimeline * 0.5) + 'px)')
-          // gTimeline.append('rect').attr('width', 100).attr('height', heightTimeline * 0.5)
-          // 文本显示区域
-          gRoot.selectAll('.gText').remove()
-          let gText = gRoot.append('g').attr('class', 'gText')
-            .style('display', 'none')
-            .style('pointer-events', 'none')
-            // .style('transform', 'translate(' + (that.widthImage * 0.5) + 'px, -' + (that.heightText * 1) + 'px)')
-            .style('transform', 'translate(' + (that.widthImage * 0.5) + 'px, ' + (that.heightImage + that.heightText * 0.5) + 'px)')
-          gText
-            // .append('g').attr('class', '')
-            .html(()=>{
-              return '<foreignObject id="text-sentence-ruler" x="0" y="0" width="' + that.widthImage + '" height="' + that.heightImage + `">
-                <div class="div-wrap"><div class="div-center">
-                  <div id="ruler" class="text-sentence" xmlns="http://www.w3.org/1999/xhtml"></div>
-                </div></div></foreignObject>
-              <switch><foreignObject id="text-sentence" x="0" y="0" width="` + that.widthImage + '" height="' + that.heightImage + `">
-                <div class="div-wrap"><div class="div-center">
-                  <div class="text-sentence" xmlns="http://www.w3.org/1999/xhtml"></div>
-                </div></div></foreignObject>
-                <g id="g-text-sentence" style="transform: translate(`
-              + 0 + `px, 0px)"><text class="text-sentence" x="20" y="20">Your SVG viewer cannot display html.</text></g></switch>`
-            })
-          // gText.append('text').attr('class', 'text-sentence')
-        }
+        
         let src = `data:${that.imgOriginal.type};base64,${that.imgOriginal.data}`
-        i.src = src
         let gRoot = d3.select(`${that.id} .img`).append('g').attr('class', 'gRoot')
         // 用于添加背景
         gRoot.append('g').attr('class', 'gBackground')
@@ -152,6 +108,62 @@ class ImgViewer {
         // 用于添加连接线
         // d3.selectAll('.gPathConnect').remove()
         gRoot.append('g').attr('class', 'gPathConnect')
+
+        var i = new Image()
+        i.onload = function () {
+          console.warn(i.width + ', ' + i.height)
+          let div = d3.select(`${that.id}`).node()
+          that.widthDiv = div.clientWidth
+          that.heightDiv = div.clientHeight
+          that.heightTimeline = that.heightDiv / 10
+          // that.heightText = 0
+          that.heightText = that.heightDiv / 20
+          let heightTimeline = that.heightTimeline
+          let heightText = that.heightText
+          that.widthImage = i.width
+          that.heightImage = i.height
+          
+          // d3.select(`${that.id} .img`).attr('viewBox', '0, -' + that.heightText + ',' + i.width + ',' + (i.height + that.heightTimeline + that.heightText))  
+          d3.select(`${that.id} .img`).attr('viewBox', '0, 0, ' + i.width + ',' + (i.height + that.heightTimeline + that.heightText))
+          
+          let gRoot = d3.select(`${that.id} .img .gRoot`)
+          // 文本框允许的最大宽度
+          let image = gRoot.select('.gImage image')
+          let clientWidthImage = image.node().getBoundingClientRect().width
+          that.widthMax = that.widthImage / clientWidthImage * that.widthDiv * 0.8
+          console.log('%cwidthImage, heightImage', 'color: green', that.widthImage, that.heightImage, that.heightTimeline, that.heightText, that)
+
+          // this.gRoot = gRoot
+          gRoot.selectAll('.gTimeline').remove()
+          // let gTimeline = gRoot.append('g').attr('class', 'gTimeline').style('transform', 'translate(' + (that.widthImage * 0.5) + 'px, ' + (that.heightImage + that.heightTimeline * 0.5) + 'px)')
+          let gTimeline = gRoot.append('g').attr('class', 'gTimeline')
+            .style('transform', 'translate(' + (that.widthImage * 0.5) + 'px, ' + (that.heightImage + that.heightText + that.heightTimeline * 0.5) + 'px)')
+          // gTimeline.append('rect').attr('width', 100).attr('height', heightTimeline * 0.5)
+          // 文本显示区域
+          gRoot.selectAll('.gText').remove()
+          let gText = gRoot.append('g').attr('class', 'gText')
+            .style('display', 'none')
+            .style('pointer-events', 'none')
+            // .style('transform', 'translate(' + (that.widthImage * 0.5) + 'px, -' + (that.heightText * 1) + 'px)')
+            .style('transform', 'translate(' + (that.widthImage * 0.5) + 'px, ' + (that.heightImage + that.heightText * 0.5) + 'px)')
+          gText
+            // .append('g').attr('class', '')
+            .html(()=>{
+              return '<foreignObject id="text-sentence-ruler" x="0" y="0" width="' + that.widthMax + '" height="' + that.heightImage + `">
+                <div class="div-wrap"><div class="div-center">
+                  <div id="ruler" class="text-sentence" xmlns="http://www.w3.org/1999/xhtml"></div>
+                </div></div></foreignObject>
+              <switch><foreignObject id="text-sentence" x="0" y="0" width="` + that.widthMax + '" height="' + that.heightImage + `">
+                <div class="div-wrap"><div class="div-center">
+                  <div class="text-sentence" xmlns="http://www.w3.org/1999/xhtml"></div>
+                </div></div></foreignObject>
+                <g id="g-text-sentence" style="transform: translate(`
+              + 0 + `px, 0px)"><text class="text-sentence" x="20" y="20">Your SVG viewer cannot display html.</text></g></switch>`
+            })
+          // gText.append('text').attr('class', 'text-sentence')
+        // }
+        // i.src = src
+
         // entity对应的index供后面引用
         let keysObj = {}
         img['data'].forEach((d, i) => {
@@ -298,6 +310,9 @@ class ImgViewer {
         that.imgResult = imgResult
         console.warn('imgResult:', imgResult)
         console.warn('ranking:', ranking)
+      }
+        i.src = src
+
         break
     }
   }
@@ -644,18 +659,19 @@ class ImgViewer {
       console.log('--------------sentence', i, sentence)
       let keySentence = sentence.id
       let tmp = {
+        textFixed: false,
         valueContextFade: true,
         contextMode: 'context-transparency', // 'context-transparency', 'context-desaturate', 'context-brightness', 'context-depth-of-field'
         overlayColor: 'rgba(0, 0, 0, 0.2)',
         lineColor: 'rgba(108, 117, 125, 1)',
         borderColor: 'rgba(0, 0, 0, 0.5)',
-        borderShow: false,
+        borderShow: true,
         transform: [],
         textDiv: {
-          x: 0,
-          y: 0,
-          width: 100,
-          height: 100,
+          width: null,
+          height: null,
+          x_center: 0,
+          y_center: 0,
         },
         path: {
           x0: 0,
@@ -782,24 +798,61 @@ class ImgViewer {
         target4legend = this.imgResult[objectIndexArr]
         console.log('target4legend', target4legend)
       }
+      let targetArr = [...tmp.target, ...tmp.target4label, ...tmp.target4legend]
+      tmp.targetArr = targetArr
       
       configArr.push(tmp)
       
     })
+
+    // let paddingPoint = Math.max(this.widthDiv/15, 50) * (that.widthImage/that.widthDiv) // 50
+    let paddingPoint = (this.widthDiv/15) * (that.widthImage/that.widthDiv) // 50
+    that.paddingPoint = paddingPoint
+    that.rCircle = paddingPoint/5
+    that.widthStroke = that.rCircle * 0.5
+    that.fontSize = that.paddingPoint * 0.35
+    let rCircle = that.rCircle
+    let widthStroke = that.widthStroke
+    console.warn('configArr', configArr)
+
+    // 合适的文本框位置
+    let rawLayoutData = that.imgReceived
+    let highlightedData = {}
+    highlightedData['sentences'] = sentences
+    highlightedData['mainX1'] = that.mainX1
+    highlightedData['mainX2'] = that.mainX2
+    highlightedData['mainY1'] = that.mainY1
+    highlightedData['mainY2'] = that.mainY2
+    highlightedData['fontSize'] = that.fontSize + 'px'
+    highlightedData['objects'] = configArr.map(d=>{
+      let a = d['targetArr'].flatten()
+      if (a.length < 1) {
+        a = d3.range(that.imgResult.length)
+      }
+      return a
+    })
+    configArr.forEach((d, highlightIndex)=>{
+      let textDiv = setTextPosition (highlightedData, rawLayoutData, highlightIndex)
+      // let textDiv = null
+      if (textDiv) {
+        d['textDiv'] = textDiv
+      } else {
+        d['textFixed'] = true
+        d['textDiv']['width'] = this.widthImage
+        d['textDiv']['x_center'] = this.widthImage * 0.5
+        d['textDiv']['y_center'] = this.heightImage + this.heightText * 0.5
+      }
+    })
+
     this.configArr = configArr
     console.warn('configArr', configArr)
     let lengthConfigArr = configArr.length
     this.lengthConfigArr = lengthConfigArr
-    let paddingPoint = Math.max(this.widthDiv/15, 50) * (that.widthImage/that.widthDiv) // 50
-    that.paddingPoint = paddingPoint
-    that.rCircle = paddingPoint/5
-    that.widthStroke = that.rCircle * 0.5
-    let rCircle = that.rCircle
-    let widthStroke = that.widthStroke
+
     let gRoot = d3.select(`${this.id} .img .gRoot`)
     let gTimeline = gRoot.select('.gTimeline')
     gTimeline.html('')
-    let widthArrow = 6//30
+    let widthArrow = 6 //30
     let ratioHeight = 0.75
     gTimeline.append("svg:defs").append("svg:marker")
       .attr("id", "triangle")
@@ -1245,6 +1298,7 @@ class ImgViewer {
     })
   }
   showSentence (config) {
+    console.warn('###############config', config)
     let that = this
     d3.selectAll('.gPath').remove()
     d3.selectAll('.gClipPath').remove()
@@ -1252,12 +1306,27 @@ class ImgViewer {
     let gText = gRoot.select('.gText')
       // .style('transform', 'translate(' + (this.widthImage * 0.5) + 'px, ' + (this.heightImage + this.heightText + this.heightTimeline * 0.5) + 'px)')
       // .style('transform', 'translate(' + (this.widthImage * 0.5) + 'px, ' + (this.heightImage + this.heightText * 0.8) + 'px)')
-      .style('transform', 'translate(' + (this.widthImage * 0.5) + 'px, ' + (this.heightImage + this.heightText * 0.5) + 'px)')
+      // .style('transform', 'translate(' + (this.widthImage * 0.5) + 'px, ' + (this.heightImage + this.heightText * 0.5) + 'px)')
+      // .style('transform', 'translate(' + (config['textDiv']['x_center']) + 'px, ' + (config['textDiv']['y_center']) + 'px)')
       .style('display', '')
-    gText.select('#text-sentence .text-sentence').html(config.text)
-      .style('font-size', (that.paddingPoint * 0.4) + 'px')
-    gText.select('#g-text-sentence .text-sentence').text(config.text)
-      .style('font-size', (that.paddingPoint * 0.4) + 'px')
+    let divTextSentence = gText.select('#text-sentence .text-sentence')
+    divTextSentence.html(config.text)
+      .style('font-size', (that.fontSize) + 'px')
+    if (config.textFixed) {
+      divTextSentence
+        .transition().duration(this.duration)
+        .style('width', '')
+        .style('height', '')
+    } else {
+      divTextSentence
+        .transition().duration(this.duration)
+        .style('width', config['textDiv']['width'] + 'px')
+        .style('height', config['textDiv']['height'] + 'px')
+    }
+      
+    let gTextSentence = gText.select('#g-text-sentence .text-sentence')
+    gTextSentence.text(config.text)
+      .style('font-size', (that.fontSize) + 'px')
 
     let gPath = gRoot.append('g').attr('class', 'gPath')
     let gClipPath =gRoot.append('g').attr('class', 'gClipPath').append('defs')
@@ -1274,7 +1343,8 @@ class ImgViewer {
     // that.showTargetArr(config.target4legend, gPath, gClipPath, gImage, gRoot)
     // 都显示
     
-    let targetArr = [...config.target, ...config.target4label, ...config.target4legend]
+    // let targetArr = [...config.target, ...config.target4label, ...config.target4legend]
+    let targetArr = config.targetArr
     that.showTargetArr(config, targetArr, gPath, gClipPath, gImage, gRoot, config.axis)
 
     d3.selectAll('.current')
@@ -1289,7 +1359,15 @@ class ImgViewer {
       // .style('transform', 'translate(' + (this.widthImage * 0.5) + 'px, ' + 200 + 'px)')
       // .style('transform', 'translate(' + (this.widthImage * 0.5) + 'px, -' + 20 + 'px)')
       .style('opacity', 1)
-      .style('transform', 'translate(' + (this.widthImage * 0.5) + 'px, ' + (this.heightImage + this.heightText * 0.5) + 'px)')
+      // .style('transform', 'translate(' + (this.widthImage * 0.5) + 'px, ' + (this.heightImage + this.heightText * 0.5) + 'px)')
+      .style('transform', () => {
+        if (config.textFixed) {
+          return 'translate(' + (this.widthImage * 0.5) + 'px, ' + (this.heightImage + this.heightText * 0.5) + 'px)'
+        } else {
+          return 'translate(' + (config['textDiv']['x_center']) + 'px, ' + (config['textDiv']['y_center']) + 'px)'
+        }
+      })
+
     // setTimeout(function() {
     //   that.addPath(config.path)
     // }, this.duration)
@@ -1428,10 +1506,10 @@ class ImgViewer {
       let tmp = {
         transform: [],
         textDiv: {
-          x: 0,
-          y: 0,
           width: 100,
           height: 100,
+          x_center: 0,
+          y_center: 0,
         },
         line: {
           x0: 0,

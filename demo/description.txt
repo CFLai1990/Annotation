@@ -37,3 +37,30 @@ Over the five years, the average sales are 200 million.
 In 2013, there is a great difference in the sales among these three manufacturers.
 From year 2013 to 2014, there is a great difference in the sales among these three manufacturers, especially between Samsung and Huawei.
 In 2013, there is a great difference in the sales between Samsung and Huawei.
+
+===== Pie =====
+In 2017, Samsung owns the largest market share, which is 50 percent more than the second one in 14%. Huawei's market share is close to that of Apple. The remaining share in 55% is left for brands not shown in this chart, including OPPO, Vivo, Xiaomi, etc.
+
+
+This image shows the global sales of three top-selling mobile phone brands in the last five years.
+We can see that Brand A has always been the best-selling brand. In 2013, the sales of Brand A reached 450 million, which were almost three times as much as the sales of Brand B. Even in the worst year, the sales of Brand A still remained above 300 million.
+As the second-ranked brand, Brand B's sales rose steadily from 2013 to 2015. But after 2015, the sales of Brand B were basically stable between 200 million and 250 million.
+Brand C, on the other hand, shows a rapidly growing trend in the last five years. The sales of Brand C in 2017 were almost as good as the sales of Brand B in 2013. It suggests that Brand C may become a strong competitor to Brand B in the mobile phone market in the near future.
+
+
+This image shows the global sales of three top-selling mobile phone brands in the last five years.
+We can see that A Company has always been the best-selling brand. In 2013, the sales of A Company reached 450 million, which were almost three times as much as the sales of B Company. Even in the worst year, the sales of A Company still remained above 300 million.
+As the second-ranked brand, B Company's sales rose steadily from 2013 to 2015. But after 2015, the sales of B Company were basically stable between 200 million and 250 million.
+C Company, on the other hand, shows a rapidly growing trend in the last five years. The sales of C Company in 2017 were almost as good as the sales of B Company in 2013. It suggests that C Company may become a strong competitor to B Company in the mobile phone market in the near future.
+
+This image shows the global sales of three top-selling mobile phone brands in the last five years.
+We can see that X has always been the best-selling brand. In 2013, the sales of X reached 450 million, which were almost three times as much as the sales of Y. Even in the worst year, the sales of X still remained above 300 million.
+As the second-ranked brand, Y's sales rose steadily from 2013 to 2015. But after 2015, the sales of Y were basically stable between 200 million and 250 million.
+Z, on the other hand, shows a rapidly growing trend in the last five years. The sales of Z in 2017 were almost as good as the sales of Z in 2013. It suggests that Z may become a strong competitor to Y in the mobile phone market in the near future.
+
+This image shows the global sales of three top-selling mobile phone brands in the last five years.
+We can see that X Company has always been the best-selling brand. In 2013, the sales of X Company reached 450 million, which were almost three times as much as the sales of Y Company. Even in the worst year, the sales of X Company still remained above 300 million.
+As the second-ranked brand, Y Company's sales rose steadily from 2013 to 2015. But after 2015, the sales of Y Company were basically stable between 200 million and 250 million.
+Z Company, on the other hand, shows a rapidly growing trend in the last five years. The sales of Z Company in 2017 were almost as good as the sales of Y Company in 2013. It suggests that Z Company may become a strong competitor to Y Company in the mobile phone market in the near future.
+
+In 2017, X Company owns the largest market share, which is 50 percent more than the second one in 14%. Z Company's market share is close to that of Y Company. The remaining share in 55% is left for brands not shown in this chart, including  U Company, V Company, etc.

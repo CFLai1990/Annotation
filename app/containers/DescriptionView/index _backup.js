@@ -156,7 +156,7 @@ class DescriptionView extends React.PureComponent {
     return (
       <DspDiv parentSize={this.props.parentSize} {...this.props.inner} id='nlptest' > 
         <h1>Please input a description:</h1>
-          <textarea id="nlptest-input" className='content' style={{'width': '100%', 'height': '50%', 'border': '1px #aaa solid'}} value={this.state.valueText} onChange={this.handleChange.bind(this)} />
+          <textarea id="nlptest-input" className='content' spellCheck='false' style={{'width': '100%', 'height': '50%', 'border': '1px #aaa solid'}} value={this.state.valueText} onChange={this.handleChange.bind(this)} />
         {/* <button type="button" id="nlptest-submit" className="btn btn-primary" onClick={this.handleSubmit.bind(this, this.state.valueText)}>OK</button> */}
         <button type="button" id="nlptest-submit" className="btn btn-primary">OK</button>
 

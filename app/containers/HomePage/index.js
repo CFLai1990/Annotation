@@ -31,9 +31,10 @@ class HomePageBody extends React.PureComponent {
     super(props)
     this.state = {
       form: null,
+      textFixed: false,
       contextMode: 'context-transparency',
       overlayColor: 'rgba(0, 0, 0, 0.2)',
-      borderShow: false,
+      borderShow: true,
       borderColor: 'rgba(0, 0, 0, 0.5)',
       active: 1,
       spanImage: 22,
@@ -211,6 +212,15 @@ class HomePageBody extends React.PureComponent {
                             <div className="inline-element mx-3" style={{'visibility': ((this.state.borderShow)?'':'hidden')}}>
                               <ColorPicker value={this.state.borderColor} showAlpha onChange={(value)=>{this.changeSetting('borderColor', value)}}></ColorPicker>
                             </div>
+                          </Form.Item>
+                          <Form.Item label="Text Fixed">
+                            <Switch
+                              value={this.state.textFixed}
+                              onValue={true}
+                              offValue={false}
+                              onChange={(value)=>{this.changeSetting('textFixed', value)}}
+                              >
+                            </Switch>
                           </Form.Item>
                         </Form>
                       </div>

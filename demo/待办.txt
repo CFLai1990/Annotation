@@ -37,5 +37,5 @@ https://codepen.io/noahbres/pen/wzBKRv
 
 stroke背景找一下在文件注释里
 
-
+\usepackage{epstopdf}
 

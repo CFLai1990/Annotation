@@ -30,8 +30,8 @@ const msg = new MsgBox('IMAGE_VIEW')
   'OD_Demo': 用于测试饼图。详见label_recognition.text
 */
 // const MESSAGE = 'OD_Image'
-// const MESSAGE = 'OD_Mask'
-const MESSAGE = 'OD_Demo'
+const MESSAGE = 'OD_Mask'
+// const MESSAGE = 'OD_Demo'
 
 const MACHINE = 'dl'
 
@@ -80,7 +80,7 @@ class ImageView extends React.PureComponent {
 
   render () {
     return (
-      <div style={{'width': '100%', 'height': '100%', 'padding': '50px'}}>
+      <div style={{'width': '100%', 'height': '100%', 'padding': '30px'}}>
         <div id='odtest' style={{'width': '100%', 'height': '100%', 'display': this.props.switchView? 'none':''}}>
           <input id='odtest-input' type='file' className='file' data-preview-file-type='text' style={{'width': '100%', 'height': '100%'}}/>
         </div>
