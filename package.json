@@ -213,13 +213,18 @@
     "testRegex": "tests/.*\\.test\\.js$"
   },
   "dependencies": {
+    "ajv": "^6.10.0",
     "babel-polyfill": "6.23.0",
     "bootstrap-fileinput": "^4.5.2",
+    "caniuse-lite": "^1.0.30000974",
     "chalk": "^1.1.3",
     "compression": "^1.7.3",
     "cross-env": "5.0.0",
     "csv-loader": "^2.1.1",
-    "d3": "^5.0.0",
+    "d3": "^5.9.2",
+    "d3-array": "^2.2.0",
+    "d3-geo": "^1.11.3",
+    "electron-to-chromium": "^1.3.152",
     "element-react": "^1.4.33",
     "element-theme-default": "^1.4.13",
     "events": "^3.0.0",
@@ -255,7 +260,7 @@
     "sanitize.css": "4.1.0",
     "socket.io-client": "^2.2.0",
     "styled-components": "2.0.0",
-    "three": "^0.92.0",
+    "three": "^0.105.2",
     "warning": "3.0.0",
     "whatwg-fetch": "2.0.3",
     "xml-loader": "^1.2.1"
