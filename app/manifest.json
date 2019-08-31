@@ -4,7 +4,9 @@
   "background_color": "#fafafa",
   "display": "standalone",
   "Scope": "/",
+  // "Scope": ".",
   "start_url": "/",
+  // "start_url": ".",
   "icons": [
     {
       "src": "icon-72x72.png",

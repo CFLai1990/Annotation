@@ -153,7 +153,7 @@ class ImgViewer {
                 <div class="div-wrap"><div class="div-center">
                   <div id="ruler" class="text-sentence" xmlns="http://www.w3.org/1999/xhtml"></div>
                 </div></div></foreignObject>
-              <switch><foreignObject id="text-sentence" x="0" y="0" width="` + that.widthMax + '" height="' + that.heightImage + `">
+              <switch><foreignObject id="text-sentence" x="0" y="0" style="overflow: visible;" width="` + that.widthMax + '" height="' + that.heightImage + `">
                 <div class="div-wrap"><div class="div-center">
                   <div class="text-sentence" xmlns="http://www.w3.org/1999/xhtml"></div>
                 </div></div></foreignObject>
@@ -326,7 +326,8 @@ class ImgViewer {
         let path = 'M'
         path += target.map(d => '' + d.join(' ')).join('L')
         console.log('path', path)
-        d3.select(`${this.id} .img`).append('g').attr('class', 'gPath').append('path').attr('class', 'mask-path').attr('d', path)
+        d3.select(`${this.id} .img`).append('g').attr('class', 'gPath').append('path')
+          .attr('class', 'mask-path').attr('d', path)
       }
     }
   }
@@ -664,8 +665,10 @@ class ImgViewer {
         contextMode: 'context-transparency', // 'context-transparency', 'context-desaturate', 'context-brightness', 'context-depth-of-field'
         overlayColor: 'rgba(0, 0, 0, 0.2)',
         lineColor: 'rgba(108, 117, 125, 1)',
-        borderColor: 'rgba(0, 0, 0, 0.5)',
-        borderShow: true,
+        borderColor: 'rgba(0, 0, 0, 0.5)', // 'transparent',
+        shadowColor: 'rgba(0, 0, 0, 0.5)', // 'transparent',
+        shadowShow: true,
+        borderShow: false,
         transform: [],
         textDiv: {
           width: null,
@@ -891,18 +894,26 @@ class ImgViewer {
     // 始终显示auxiliary部分，包括legend和axes
     that.showAuxiliary()
 
-    // 添加背景blur的东西
-    let filter = `<filter id="dropshadow" width="300%" height="300%">
-  <feGaussianBlur in="SourceGraphic" stdDeviation="5"/> <!-- stdDeviation is how much to blur -->
-  <feOffset dx="0" dy="0" result="offsetblur"/> <!-- how much to offset -->
-  <feComponentTransfer>
-    <feFuncA type="linear" slope="0.5"/> <!-- slope is the opacity of the shadow -->
-  </feComponentTransfer>
-  <feMerge> 
-    <feMergeNode/> <!-- this contains the offset blurred image -->
-    <!-- <feMergeNode in="SourceGraphic"/> --> <!-- this contains the element that the filter is applied to -->
-  </feMerge>
-</filter>`
+    // 添加背景blur的东西，添加box-shadow效果
+//     let filter = `<filter id="dropshadow" width="300%" height="300%">
+//   <feGaussianBlur in="SourceGraphic" stdDeviation="5"/> <!-- stdDeviation is how much to blur -->
+//   <feOffset dx="0" dy="0" result="offsetblur"/> <!-- how much to offset -->
+//   <feComponentTransfer>
+//     <feFuncA type="linear" slope="0.5"/> <!-- slope is the opacity of the shadow -->
+//   </feComponentTransfer>
+//   <feMerge> 
+//     <feMergeNode/> <!-- this contains the offset blurred image -->
+//     <!-- <feMergeNode in="SourceGraphic"/> --> <!-- this contains the element that the filter is applied to -->
+//   </feMerge>
+// </filter>`
+    let filter = `<filter id="dropshadow" x="-100%" y="-50%" height="200%" width="400%">
+      <feGaussianBlur in="SourceGraphic" stdDeviation="3"/> 
+      <feOffset dx="` + (that.widthStroke) + `" dy="-` + (that.widthStroke / 2) + `" result="offsetblur"/> 
+      <feMerge> 
+        <feMergeNode/>
+        <feMergeNode in="SourceGraphic"/> 
+      </feMerge>
+    </filter>` // <feFlood flood-color="gray" flood-opacity="0.9" result="offsetColor"/>
     gTimeline.append('defs').html(filter)
     // gRoot.select
 // <circle cx="170" cy="80" r="60" style="filter:url(#dropshadow)"/>
@@ -1056,9 +1067,14 @@ class ImgViewer {
     gImage.classed('is-hidden', true)
     let svgImgContext = d3.select('#svg-img-context')
     let borderOpacity = 0
+    let shadowOpacity = 0
     let borderColor = config.borderColor
+    let shadowColor = config.shadowColor
     if (config.borderShow) {
       borderOpacity = 1
+    }
+    if (config.shadowShow) {
+      shadowOpacity = 1
     }
     if (targetArr.length > 0) {
       // if (config.valueContextFade) {
@@ -1138,14 +1154,17 @@ class ImgViewer {
         .style('stroke', borderColor)
         .style('opacity', borderOpacity)
       d3.select(this).select('.stroke-background')
-        .transition().duration(that.duration / 2)
-        .style('stroke', ()=>{
-          let a = borderColor.split(',')
-          a.pop()
-          let b = a.join(', ')
-          return  (b + ', 1)')
-        })
-        .style('opacity', borderOpacity)
+        // .transition().duration(that.duration / 2)
+        .transition().duration(that.duration)
+        // .style('stroke', ()=>{
+        //   let a = borderColor.split(',')
+        //   a.pop()
+        //   let b = a.join(', ')
+        //   return  (b + ', 1)')
+        // })
+        // .style('opacity', borderOpacity)
+        .style('fill', shadowColor)
+        .style('opacity', shadowOpacity)
     })
 
   }

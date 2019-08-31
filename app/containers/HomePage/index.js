@@ -34,8 +34,10 @@ class HomePageBody extends React.PureComponent {
       textFixed: false,
       contextMode: 'context-transparency',
       overlayColor: 'rgba(0, 0, 0, 0.2)',
-      borderShow: true,
+      borderShow: false,
       borderColor: 'rgba(0, 0, 0, 0.5)',
+      shadowShow: true,
+      shadowColor: 'rgba(0, 0, 0, 0.5)',
       active: 1,
       spanImage: 22,
       spanDescription: 10,
@@ -147,9 +149,12 @@ class HomePageBody extends React.PureComponent {
         
         <div style={{'width': '100%', 'transform': 'translateX(15%)', 'margin': '20px'}}>
           <Steps active={this.state.active}>
-            <Steps.Step title="step 1" icon="picture"></Steps.Step>
+            {/* <Steps.Step title="step 1" icon="picture"></Steps.Step>
             <Steps.Step title="step 2" icon="edit"></Steps.Step>
-            <Steps.Step title="step 3" icon="upload"></Steps.Step>
+            <Steps.Step title="step 3" icon="upload"></Steps.Step> */}
+            <Steps.Step title="Upload Image" icon="picture"></Steps.Step>
+            <Steps.Step title="Write Description" icon="edit"></Steps.Step>
+            <Steps.Step title="Get Annotated Visualization" icon="upload"></Steps.Step>
           </Steps>
         </div>
         </div>
@@ -185,7 +190,7 @@ class HomePageBody extends React.PureComponent {
                   <div style={{'overflow': 'auto'}}>
                   </div>
                   </div>*/}
-                  <Menu defaultOpeneds={["1", "2"]} className="el-menu-vertical-demo" model={this.state.form} labelWidth="80">
+                  <Menu defaultOpeneds={["1", "2"]} className="el-menu-vertical-demo" model={this.state.form} labelWidth="80" style={{'height': '100%'}}>
                   <Menu.SubMenu style={{'overflow': 'visible'}} index="1" title={<span><i className="el-icon-setting"></i>Style Configuration</span>}>
                       <div className="inside-menu" >
                         <Form labelPosition='top' labelWidth="" model={this.state.form} onSubmit={(e)=>{e.preventDefault()}} className="demo-form-stacked">
@@ -200,6 +205,18 @@ class HomePageBody extends React.PureComponent {
                           </Form.Item>
                           <Form.Item label="Overlay Rectangle Color">
                             <ColorPicker value={this.state.overlayColor} showAlpha onChange={(value)=>{this.changeSetting('overlayColor', value)}}></ColorPicker>
+                          </Form.Item>
+                          <Form.Item label="Show Shadow">
+                            <Switch
+                              value={this.state.shadowShow}
+                              onValue={true}
+                              offValue={false}
+                              onChange={(value)=>{this.changeSetting('shadowShow', value)}}
+                              >
+                            </Switch>
+                            <div className="inline-element mx-3" style={{'visibility': ((this.state.shadowShow)?'':'hidden')}}>
+                              <ColorPicker value={this.state.shadowColor} showAlpha onChange={(value)=>{this.changeSetting('shadowColor', value)}}></ColorPicker>
+                            </div>
                           </Form.Item>
                           <Form.Item label="Show Border">
                             <Switch

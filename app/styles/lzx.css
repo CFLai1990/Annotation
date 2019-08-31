@@ -5,10 +5,12 @@
 	transition: all 1s;
 	stroke-linecap: round;
   stroke-linejoin: round;
+  stroke: transparent;
 }
 .stroke-background {
 	fill: transparent;
 	fill: white;
+	fill: #888;
 
 }
 .img-background {
@@ -245,4 +247,8 @@
 
 .inline-element {
 	display: inline-block;
+}
+
+#app .el-step__title {
+	transform: translateX(-35%);
 }
