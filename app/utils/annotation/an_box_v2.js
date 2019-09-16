@@ -1,6 +1,6 @@
 function setTextPosition (highlightedData, rawLayoutData, highlightIndex) {
   let tmpRectData = rawLayoutData['data']
-  tmpRectData = tmpRectData.filter((d)=>(d.class=='rectangle'))
+  tmpRectData = tmpRectData // .filter((d)=>(d.class=='rectangle'))
   let data = []
   for (let i = 0; i < tmpRectData.length; i++) {
     data.push({
@@ -18,9 +18,7 @@ function setTextPosition (highlightedData, rawLayoutData, highlightIndex) {
   let sentenceRegion = {x: 200, y: 100}
   // let annotationText = 'anofi ivn3ir vmo3pr n0vior23 vrio2 vnior noc3'
   let annotationText = highlightedData['sentences'][highlightIndex]['content']
-  // let boxAspectRatios = [1/4, (Math.sqrt(5) - 1) / 2, 1/3, 1/4, (Math.sqrt(5) + 1) / 2]
-  // 20190916
-  let boxAspectRatios = [(Math.sqrt(5) - 1) / 2, 1/3, (Math.sqrt(5) + 1) / 2, 1/4, 3]
+  let boxAspectRatios = [1/4, (Math.sqrt(5) - 1) / 2, 1/3, (Math.sqrt(5) + 1) / 2]
   // let fontSize = '38px'
   for (let aspectIndex = 0; aspectIndex < boxAspectRatios.length; aspectIndex++) {
     let boxAspectRatio = boxAspectRatios[aspectIndex]
@@ -95,9 +93,6 @@ function setTextPositionWithTextSize (highlightedData, rawLayoutData, highlightI
     let bboxY = Math.max(data[i].bbox.y - C - sentenceRegion.y / 2, mainY1 + C + sentenceRegion.y / 2)
     let bboxWidth = Math.min( data[i].bbox.x + data[i].bbox.width + C + sentenceRegion.x / 2, mainX2 - C - sentenceRegion.x / 2 ) - bboxX
     let bboxHeight = Math.min( data[i].bbox.y + data[i].bbox.height + C + sentenceRegion.y / 2, mainY2 - C - sentenceRegion.y / 2 ) - bboxY
-    // 20190916 有可能是负值
-    bboxWidth = Math.max(0, bboxWidth)
-    bboxHeight = Math.max(0, bboxHeight)
     let tmpItem = {
       bbox: {
         x: bboxX,
@@ -119,9 +114,6 @@ function setTextPositionWithTextSize (highlightedData, rawLayoutData, highlightI
     let bboxY = Math.max(tmpLegendRect[i].bbox.y - C - sentenceRegion.y / 2, mainY1 + C + sentenceRegion.y / 2)
     let bboxWidth = Math.min( tmpLegendRect[i].bbox.x + tmpLegendRect[i].bbox.width + C + sentenceRegion.x / 2, mainX2 - C - sentenceRegion.x / 2 ) - bboxX
     let bboxHeight = Math.min( tmpLegendRect[i].bbox.y + tmpLegendRect[i].bbox.height + C + sentenceRegion.y / 2, mainY2 - C - sentenceRegion.y / 2 ) - bboxY
-    // 20190916 有可能是负值
-    bboxWidth = Math.max(0, bboxWidth)
-    bboxHeight = Math.max(0, bboxHeight)
     let tmpItem = {
       bbox: {
         x: bboxX,
@@ -362,6 +354,7 @@ function setTextPositionWithTextSize (highlightedData, rawLayoutData, highlightI
   // console.log('minPosY', minPosY)
   // console.log('minDist', minDist)
 
+  // let createSVG = true
   let createSVG = false
   if (createSVG && minPosX != null) {
     let width = mainX2 + 100

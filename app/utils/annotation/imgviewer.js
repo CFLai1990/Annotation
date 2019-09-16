@@ -73,7 +73,12 @@ class ImgViewer {
     })
     if (colorArr.length > 0) {
       let colorArrSorted = colorArr.sort((a, b) => (Number(b.value)-Number(a.value)))
-      return colorArrSorted[0].color
+      // return colorArrSorted[0].color
+      if (colorArrSorted[0].color === "white") {
+        return colorArrSorted[1].color
+      } else {
+        return colorArrSorted[0].color
+      }
     } else {
       return null
     }
@@ -248,7 +253,13 @@ class ImgViewer {
               let ticks = d['axis_data']['ticks']
               let direction = d['axis_data']['direction']
               let ticksArr = []
+              // 万一后台判断错呢？可能实际上direction应该是90
+              if(d['bbox']['height']>4*ticks[0]['bbox']['height']) {
+                d['axis_data']['direction'] = 90
+                direction = 90
+              }
               if (direction === 0) {
+                // 水平的轴
                 ticks.forEach(tick => {
                   tick['value'] = tick['position']['x']
                 })
@@ -835,6 +846,7 @@ class ImgViewer {
       return a
     })
     configArr.forEach((d, highlightIndex)=>{
+      console.warn('----------------', {highlightedData, rawLayoutData, highlightIndex})
       let textDiv = setTextPosition (highlightedData, rawLayoutData, highlightIndex)
       // let textDiv = null
       if (textDiv) {
@@ -1005,6 +1017,7 @@ class ImgViewer {
           let gRect = gRoot.select('.gBackground').append('g').attr('class', 'gRectRange')
             .style('opacity', 0)
           if (direction === 0) {
+            // 水平的轴上的tick
             gRect.append('rect').attr('class', 'rectRange')
               // .attr('x', range[0]).attr('y', that.mainY1)
               .attr('x', range[0]).attr('y', that.mainY2)
@@ -1022,8 +1035,9 @@ class ImgViewer {
               .style('opacity', 1)
 
           } else {
+            // 应该是direction===90, 但是默认是垂直的轴上的tick了
             gRect.append('rect').attr('class', 'rectRange')
-              .attr('x', that.mainX1).attr('y', range[0])
+              // .attr('x', that.mainX1).attr('y', range[0])
               .attr('x', that.mainX1).attr('y', range[0])
               // .attr('width', that.mainX2 - that.mainX1).attr('height', range[1]-range[0])
               .attr('width', 0).attr('height', range[1]-range[0])
