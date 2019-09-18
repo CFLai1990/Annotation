@@ -1,6 +1,6 @@
 function setTextPosition (highlightedData, rawLayoutData, highlightIndex) {
   let tmpRectData = rawLayoutData['data']
-  tmpRectData = tmpRectData.filter((d)=>(d.class=='rectangle'))
+  tmpRectData = tmpRectData // .filter((d)=>(d.class=='rectangle'))
   let data = []
   for (let i = 0; i < tmpRectData.length; i++) {
     data.push({

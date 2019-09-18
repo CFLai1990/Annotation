@@ -253,11 +253,11 @@ class ImgViewer {
               let ticks = d['axis_data']['ticks']
               let direction = d['axis_data']['direction']
               let ticksArr = []
-              // 万一后台判断错呢？可能实际上direction应该是90
-              if(d['bbox']['height']>4*ticks[0]['bbox']['height']) {
-                d['axis_data']['direction'] = 90
-                direction = 90
-              }
+              // // 万一后台判断错呢？可能实际上direction应该是90
+              // if(d['bbox']['height']>4*ticks[0]['bbox']['height']) {
+              //   d['axis_data']['direction'] = 90
+              //   direction = 90
+              // }
               if (direction === 0) {
                 // 水平的轴
                 ticks.forEach(tick => {
@@ -597,6 +597,7 @@ class ImgViewer {
     let keys = Object.keys(that.colorsObj)
     let string = text
     keys.forEach(pattern => {
+      console.log('=====pattern', pattern)
       let re = new RegExp(pattern, "gi");
       let color = that.colorsObj[pattern]
       let tag = 'b' // 'span'
