@@ -1,0 +1,3 @@
+d3.selectAll('circle').style('r', '5px')
+
+d3.selectAll('circle').each(function(d){if(d['population']<10000000){d3.select(this).style('opacity', 0)}})

@@ -21,6 +21,12 @@ class MsgUploader {
       this.eventEmitter = emitter.addListener('submitDescription', (message) => {
         console.log('HomePage eventEmitter', message)
         let msg = $(this.input).val()
+        // // 待删除内容
+        // // start
+        // msg = msg.replace('80000', '8')
+        // msg = msg.replace('80000', '8')
+        // msg = msg.replace('40000', '4')
+        // // end
         console.log('nlp msg:', msg)
         // if (msg === '') { msg = null }
         if (msg === '') { msg = ' ' }

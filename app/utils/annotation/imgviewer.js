@@ -156,11 +156,15 @@ class ImgViewer {
             .html(()=>{
               return '<foreignObject id="text-sentence-ruler" x="0" y="0" width="' + that.widthMax + '" height="' + that.heightImage + `">
                 <div class="div-wrap"><div class="div-center">
-                  <div id="ruler" class="text-sentence" xmlns="http://www.w3.org/1999/xhtml"></div>
+                  <div id="ruler" class="text-sentence" xmlns="http://www.w3.org/1999/xhtml">
+                    <div></div>
+                  </div>
                 </div></div></foreignObject>
               <switch><foreignObject id="text-sentence" x="0" y="0" style="overflow: visible;" width="` + that.widthMax + '" height="' + that.heightImage + `">
                 <div class="div-wrap"><div class="div-center">
-                  <div class="text-sentence" xmlns="http://www.w3.org/1999/xhtml"></div>
+                  <div class="text-sentence" xmlns="http://www.w3.org/1999/xhtml">
+                    <div></div>
+                  </div>
                 </div></div></foreignObject>
                 <g id="g-text-sentence" style="transform: translate(`
               + 0 + `px, 0px)"><text class="text-sentence" x="20" y="20">Your SVG viewer cannot display html.</text></g></switch>`
@@ -242,7 +246,10 @@ class ImgViewer {
               if (that.colorMainObj[color]) {
                 if (legendsObj[key]) {
                 } else {
-                  legendsObj[key] = that.colorMainObj[color]
+                  let tmp = {}
+                  tmp['data'] = d
+                  tmp['entity'] = that.colorMainObj[color]
+                  legendsObj[key] = tmp
                 }
               }
             }
@@ -295,15 +302,19 @@ class ImgViewer {
         // 颜色信息供后面引用
         let colorsObj = {}
         that.legendsArr.forEach(d => {
-          if (that.legendsObj[d].length > 0) {
-            let index = that.legendsObj[d][0]
-            colorsObj[d] = img['data'][index]['colorMain']
+          if (that.legendsObj[d]['entity'].length > 0) {
+            // let index = that.legendsObj[d]['entity'][0]
+            // colorsObj[d] = img['data'][index]['colorMain']
+            colorsObj[d] = 'rgb(' + that.legendsObj[d]['data']['legend_data']['color_rgb'].join(',') + ')'
           }
         })
         that.labelsArr.forEach(d => {
-          if (that.labelsObj[d].length > 0) {
-            let index = that.labelsObj[d][0]
-            colorsObj[d] = img['data'][index]['colorMain']
+          if (colorsObj[d]) {
+          } else {
+            if (that.labelsObj[d].length > 0) {
+              let index = that.labelsObj[d][0]
+              colorsObj[d] = img['data'][index]['colorMain']
+            }
           }
         })
         that.colorsObj = colorsObj
@@ -593,12 +604,15 @@ class ImgViewer {
     return [objectIndexArr, tickLinesArr]
   }
   getContent (text) {
+    function escapeRegExp(str) {
+      return str.replace(/[\-\[\]\/\{\}\(\)\*\+\?\.\\\^\$\|]/g, "\\$&");
+    }
     let that = this
     let keys = Object.keys(that.colorsObj)
     let string = text
     keys.forEach(pattern => {
       console.log('=====pattern', pattern)
-      let re = new RegExp(pattern, "gi");
+      let re = new RegExp(escapeRegExp(pattern), "gi");
       let color = that.colorsObj[pattern]
       let tag = 'b' // 'span'
       string = string.replace(re, '<' + tag + ' style="color: '+ color+';">$&</' + tag + '>')
@@ -669,6 +683,13 @@ class ImgViewer {
     // configArr.push(tmp)
     console.log('keySentences', keySentences)
     sentences.forEach((sentence, i) => {
+      // // 待删除内容
+      // // start
+      // let msg = sentence['content']
+      // msg = msg.replace('4', '40000')
+      // msg = msg.replace('8', '80000')
+      // sentence['content'] = msg
+      // // end
       console.log('--------------sentence', i, sentence)
       let keySentence = sentence.id
       let tmp = {
@@ -791,7 +812,7 @@ class ImgViewer {
       keys.forEach(k=>{
         let objectKey = entity[k]['legend']
         if (this.legendsObj[objectKey]) {
-          let objectIndexArr = this.legendsObj[objectKey]
+          let objectIndexArr = this.legendsObj[objectKey]['entity']
           console.log('***************', objectKey, objectIndexArr)
           let axis = entity[k]['axis']
           if (axis) {
@@ -821,11 +842,17 @@ class ImgViewer {
     })
 
     // let paddingPoint = Math.max(this.widthDiv/15, 50) * (that.widthImage/that.widthDiv) // 50
-    let paddingPoint = (this.widthDiv/15) * (that.widthImage/that.widthDiv) // 50
+    let ratioPadding = 18 // 15
+    let paddingPoint = (this.widthDiv/ratioPadding) * (that.widthImage/that.widthDiv) // 50
+    if (that.widthImage < that.heightImage) {
+      paddingPoint = (this.widthDiv/ratioPadding) * (that.heightImage/that.heightDiv) // 50
+    }
     that.paddingPoint = paddingPoint
     that.rCircle = paddingPoint/5
     that.widthStroke = that.rCircle * 0.5
-    that.fontSize = that.paddingPoint * 0.35
+    // that.fontSize = that.paddingPoint * 0.35
+    that.fontSize = that.paddingPoint * 0.42 // pie chart
+    // that.fontSize = that.paddingPoint * 0.26
     let rCircle = that.rCircle
     let widthStroke = that.widthStroke
     console.warn('configArr', configArr)
@@ -900,6 +927,7 @@ class ImgViewer {
       })
     gPoint.append('circle').attr('class', (d, i) => ('circle-point index-' + i))
       .style('r', (rCircle) + 'px')
+      .style('stroke-width', (rCircle*0.2) + 'px')
 
 
     that.showContext()
@@ -1297,19 +1325,50 @@ class ImgViewer {
         // .transition().duration(that.duration)
         .style('opacity', 1)
     })
-    // 显示主体以外的地方
+    // 显示主体以外的地方, 左上 左下 右下 右上
+    // let others = [{
+    //   id: 'top',
+    //   points: [[0, 0], [0, that.mainY1], [that.widthImage, that.mainY1], [that.widthImage, 0]]
+    // }, {
+    //   id: 'left',
+    //   points: [[0, 0], [0, that.heightImage], [that.mainX1, that.heightImage], [that.mainX1, 0]]
+    // }, {
+    //   id: 'right',
+    //   points: [[that.mainX2, 0], [that.mainX2, that.heightImage], [that.widthImage, that.heightImage], [that.widthImage, 0]]
+    // }, {
+    //   id: 'bottom',
+    //   points: [[0, that.mainY2], [0, that.heightImage], [that.widthImage, that.heightImage], [that.widthImage, that.mainY2]]
+    // }]
+    let x1 = d3.min(this.imgReceived['data'], function (a) {
+      return a['bbox']['x']
+    })
+    let x2 = d3.max(this.imgReceived['data'], function (a) {
+      return a['bbox']['x'] + a['bbox']['width']
+    })
+    let y1 = d3.min(this.imgReceived['data'], function (a) {
+      return a['bbox']['y']
+    })
+    let y2 = d3.max(this.imgReceived['data'], function (a) {
+      return a['bbox']['y'] + a['bbox']['height']
+    })
+    let margin = Math.ceil(that.heightImage/50)
+    x1 -= margin
+    x2 += margin
+    y1 -= margin
+    y2 += margin
+    console.log('x1 x2 y1 y2', x1, x2, y1, y2)
     let others = [{
       id: 'top',
-      points: [[0, 0], [that.mainX1, that.mainY1], [that.mainX2, that.mainY1], [that.mainX2, 0]]
+      points: [[0, 0], [0, y1], [that.widthImage, y1], [that.widthImage, 0]]
     }, {
       id: 'left',
-      points: [[0, 0], [0, that.heightImage], [that.mainX1, that.heightImage], [that.mainX1, 0]]
+      points: [[0, 0], [0, that.heightImage], [x1, that.heightImage], [x1, 0]]
     }, {
       id: 'right',
-      points: [[that.mainX2, 0], [that.mainX2, that.heightImage], [that.widthImage, that.heightImage], [that.widthImage, 0]]
+      points: [[x2, 0], [x2, that.heightImage], [that.widthImage, that.heightImage], [that.widthImage, 0]]
     }, {
       id: 'bottom',
-      points: [[0, that.mainY2], [0, that.heightImage], [that.widthImage, that.heightImage], [that.widthImage, that.mainY2]]
+      points: [[0, y2], [0, that.heightImage], [that.widthImage, that.heightImage], [that.widthImage, y2]]
     }]
     others.forEach(d => {
       let target =  d['points']
@@ -1344,8 +1403,11 @@ class ImgViewer {
       // .style('transform', 'translate(' + (config['textDiv']['x_center']) + 'px, ' + (config['textDiv']['y_center']) + 'px)')
       .style('display', '')
     let divTextSentence = gText.select('#text-sentence .text-sentence')
-    divTextSentence.html(config.text)
+    let div = divTextSentence.select('div')
+      .style('opacity', 0)
+      .html(config.text)
       .style('font-size', (that.fontSize) + 'px')
+
     if (config.textFixed) {
       divTextSentence
         .transition().duration(this.duration)
@@ -1357,6 +1419,10 @@ class ImgViewer {
         .style('width', config['textDiv']['width'] + 'px')
         .style('height', config['textDiv']['height'] + 'px')
     }
+    div
+      .transition().duration(this.duration * 2)
+      .style('opacity', 1)
+
       
     let gTextSentence = gText.select('#g-text-sentence .text-sentence')
     gTextSentence.text(config.text)
@@ -1382,10 +1448,10 @@ class ImgViewer {
     that.showTargetArr(config, targetArr, gPath, gClipPath, gImage, gRoot, config.axis)
 
     d3.selectAll('.current')
-      .style('r', (that.paddingPoint/5) + 'px')
+      // .style('r', (that.paddingPoint/5) + 'px')
       .classed('current', false)
     d3.select('.circle-point.index-' + config.index).classed('current', true)
-      .style('r', (that.paddingPoint/10*3) + 'px')
+      // .style('r', (that.paddingPoint/10*3) + 'px')
     gText
       .raise()
       .style('opacity', 0)

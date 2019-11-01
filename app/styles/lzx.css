@@ -34,24 +34,29 @@
 	r: 10px;
 	/*fill: white;*/
 	/*stroke: red;*/
-	fill: #fc9272;
-	stroke: none;
+	/*fill: #fc9272;*/
+	fill: white;
+	stroke: #ccc;
 	transition: all 0.5s;
 }
 .circle-point.current {
 	r: 15px;
 	/*fill: red;*/
-	fill: #de2d26;
+	/*fill: #de2d26;*/
+	fill: #555;
+	stroke: #ccc;
 	transition: all 0.5s;
 }
 .path-timeline {
 	/*stroke: #aaa;*/
-	stroke: #fc9272;
+	/*stroke: #fc9272;*/
+	stroke: #ccc;
 	stroke-width: 5px;
 }
 .markerTriangle {
 	/*fill: #aaa;*/
-	fill: #fc9272;
+	/*fill: #fc9272;*/
+	fill: #ccc;
 	stroke: none;
 }
 

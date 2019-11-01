@@ -21,6 +21,7 @@ function setTextPosition (highlightedData, rawLayoutData, highlightIndex) {
   // let boxAspectRatios = [1/4, (Math.sqrt(5) - 1) / 2, 1/3, 1/4, (Math.sqrt(5) + 1) / 2]
   // 20190916
   let boxAspectRatios = [(Math.sqrt(5) - 1) / 2, 1/3, (Math.sqrt(5) + 1) / 2, 1/4, 3]
+  // let boxAspectRatios = [1/4, (Math.sqrt(5) - 1) / 2, (Math.sqrt(5) + 1) / 2, 1/4, 3]
   // let fontSize = '38px'
   for (let aspectIndex = 0; aspectIndex < boxAspectRatios.length; aspectIndex++) {
     let boxAspectRatio = boxAspectRatios[aspectIndex]

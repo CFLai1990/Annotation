@@ -142,26 +142,31 @@ class HomePageBody extends React.PureComponent {
       <div style={{'width': '100%', 'height': '100%', 'display': 'flex', 'flexDirection': 'column', 'flexGrow': '1', 'border': '1px #aaa solid', 'overflow': 'hidden'}}>
         <div>
           <Menu theme="dark" defaultActive="0" className="el-menu-demo" mode="horizontal">
+          {/*}
             <Menu.Item index="1" style={{'fontSize': '2rem', 'fontWeight': 'bold'}}>Vis Annotation</Menu.Item>
+          */}
+            <Menu.Item index="1" style={{'fontSize': '2rem', 'fontWeight': 'bold'}}>Automatic Annotation Synchronizing with Textual Description for Visualization</Menu.Item>
           </Menu>
         </div>
         <div style={{'position': 'relative'}}>
         
         <div style={{'width': '100%', 'transform': 'translateX(15%)', 'margin': '20px'}}>
+        {/* 
           <Steps active={this.state.active}>
-            {/* <Steps.Step title="step 1" icon="picture"></Steps.Step>
-            <Steps.Step title="step 2" icon="edit"></Steps.Step>
-            <Steps.Step title="step 3" icon="upload"></Steps.Step> */}
             <Steps.Step title="Upload Image" icon="picture"></Steps.Step>
             <Steps.Step title="Write Description" icon="edit"></Steps.Step>
             <Steps.Step title="Get Annotated Visualization" icon="upload"></Steps.Step>
           </Steps>
+          */}
         </div>
         </div>
         <div className="main-container">
           <Layout.Row style={{'width': '100%', 'height': '100%'}}>
-          <Layout.Col span={ 4 } offset={ 0 } style={{'position': 'absolute', 'height': '90%'}}>
+          <Layout.Col span={ 4 } offset={ 0 } style={{'position': 'absolute', 'height': '94%'}}>
               <Card className="is-transition" bodyStyle={{ padding: 0 }} style={{'overflow': 'visible', 'width': '100%', 'height': '100%', 'transform': ((this.state.spanSetting===1)?'translateX(-100%)': '')}}>
+              <div className="el-tag el-tag--gray" style={{'position': 'absolute', 'right': '0%', 'top': '50%', 'height': '10%', 'borderRadius': '0 1rem 1rem 0', 'transform': 'translate(100%, -100%)', 'fontSize': '2rem', 'display': (((this.state.spanImage===22 || this.state.spanImage===18)&&(this.state.isImageUploaded))? 'flex':'none'), 'alignItems': 'center', }} onClick={()=>{this.switchSetting()}}>
+                <Tag type="gray"><i className={(this.state.spanSetting===1)?'el-icon-d-arrow-right':'el-icon-d-arrow-left'}></i></Tag>
+              </div>
                 <div className="my-scroll  d-flex flex-column" style={{'width': '100%', 'height': '100%'}}>
                 {/*<div style={{'max-height': '60%'}}>
                   <Menu defaultActive="1" className="el-menu-vertical-demo">
@@ -293,17 +298,14 @@ class HomePageBody extends React.PureComponent {
                   </Collapse.Item>
                 </Collapse>*/}
               </Card>
-              <div style={{'position': 'absolute', 'left': '0%', 'top': '0%', 'transform': 'translateY(-100%)', 'fontSize': '2rem', 'display': (((this.state.spanImage===22 || this.state.spanImage===18)&&(this.state.isImageUploaded))? '':'none')}} onClick={()=>{this.switchSetting()}}>
-                <Tag type="gray"><i className={(this.state.spanSetting===1)?'el-icon-caret-right':'el-icon-caret-left'}></i></Tag>
-              </div>
             </Layout.Col>
             <Layout.Col span={ this.state.spanSetting } offset={ 0 } style={{'opacity': '0', 'width': ((this.state.spanSetting===1)?'0%': null), 'height': '100%', 'pointerEvents': 'none'}}>
-              <Card bodyStyle={{ padding: 0 }} style={{'width': '100%', 'height': '90%'}}>
+              <Card bodyStyle={{ padding: 0 }} style={{'width': '100%', 'height': '94%'}}>
                 <div style={{'width': '100%', 'height': '100%'}}></div>
               </Card>
             </Layout.Col>
             <Layout.Col span={ this.state.spanImage } offset={ 1 } style={{'height': '100%'}}>
-              <Card bodyStyle={{ padding: 0 }} style={{'width': '100%', 'height': '90%'}}>
+              <Card bodyStyle={{ padding: 0 }} style={{'width': '100%', 'height': '94%'}}>
                 <ImageView style={{'width': '100%', 'height': '100%'}} switchView={this.state.isImageUploaded} />
               </Card>
               <div className="my-3" style={{'width': '100%', 'height': '10%'}} >
@@ -314,7 +316,7 @@ class HomePageBody extends React.PureComponent {
             <Layout.Col span={ this.state.spanDescription } offset={ 1 } style={{'height': '100%'}}>
               <Card 
                 className="card4description"
-                bodyStyle={{ padding: 0 }} style={{'width': '100%', 'height': '90%'}}
+                bodyStyle={{ padding: 0 }} style={{'width': '100%', 'height': '94%'}}
               >
                 <DescriptionView style={{'width': '100%', 'height': '100%'}} />
               </Card>
