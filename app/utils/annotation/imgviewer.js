@@ -671,6 +671,7 @@ class ImgViewer {
     //     }
     //   }
     // }
+    console.log('----showSentences', message)
     let sentences = message['sentences']
     let entities = message['entities']
     let keySentences = sentences.map(d=>d.id)
