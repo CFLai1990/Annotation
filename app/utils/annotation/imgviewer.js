@@ -862,6 +862,7 @@ class ImgViewer {
     let rawLayoutData = that.imgReceived
     let highlightedData = {}
     highlightedData['sentences'] = sentences
+    highlightedData['text'] = configArr.map(d=>d['text'])
     highlightedData['mainX1'] = that.mainX1
     highlightedData['mainX2'] = that.mainX2
     highlightedData['mainY1'] = that.mainY1
