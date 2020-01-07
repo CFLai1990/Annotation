@@ -75,7 +75,11 @@ class ImgViewer {
       let colorArrSorted = colorArr.sort((a, b) => (Number(b.value)-Number(a.value)))
       // return colorArrSorted[0].color
       if (colorArrSorted[0].color === "white") {
-        return colorArrSorted[1].color
+        if (colorArrSorted[1]) {
+          return colorArrSorted[1].color
+        } else {
+          return null
+        }
       } else {
         return colorArrSorted[0].color
       }
