@@ -757,12 +757,14 @@ class ImgViewer {
         objectIndexArr = tmp.target[0][0]
         target = this.imgResult[objectIndexArr]
         console.log('target', target)
-        tmp.path.x0 = this.widthImage * 0.5
-        tmp.path.y0 = -20 // 200
-        // tmp.path.x1 = target['position'].x
-        // tmp.path.y1 = target['position'].y
-        tmp.path.x1 = target['bbox'].x + target['bbox'].width * 0.5
-        tmp.path.y1 = target['bbox'].y
+        if (target) {
+          tmp.path.x0 = this.widthImage * 0.5
+          tmp.path.y0 = -20 // 200
+          // tmp.path.x1 = target['position'].x
+          // tmp.path.y1 = target['position'].y
+          tmp.path.x1 = target['bbox'].x + target['bbox'].width * 0.5
+          tmp.path.y1 = target['bbox'].y
+        }
       } else {
         // 句子中没有entity
       }
