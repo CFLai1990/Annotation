@@ -15,14 +15,9 @@ function setTextPosition (highlightedData, rawLayoutData, highlightIndex) {
 
   // let C = 20
   let C = Math.max(highlightedData['mainX2'] - highlightedData['mainX1'], highlightedData['mainY2'] - highlightedData['mainY1']) * 0.022
-  if (C < 6) {
-    C = 6
-  }
   let sentenceRegion = {x: 200, y: 100}
   // let annotationText = 'anofi ivn3ir vmo3pr n0vior23 vrio2 vnior noc3'
-  // 20200108 将content改为text
-  // let annotationText = highlightedData['sentences'][highlightIndex]['content']
-  let annotationText = highlightedData['text'][highlightIndex]
+  let annotationText = highlightedData['sentences'][highlightIndex]['content']
   // let boxAspectRatios = [1/4, (Math.sqrt(5) - 1) / 2, 1/3, 1/4, (Math.sqrt(5) + 1) / 2]
   // 20190916
   let boxAspectRatios = [(Math.sqrt(5) - 1) / 2, 1/3, (Math.sqrt(5) + 1) / 2, 1/4, 3]
@@ -62,10 +57,7 @@ function setTextPosition (highlightedData, rawLayoutData, highlightIndex) {
     }
     annotationDiv.style.fontSize = fontSize
     annotationDiv.style.width = textWidth + 'px'
-    // 20200108
-    // innerText改为innerHTML
-    // annotationDiv.innerText = annotationText
-    annotationDiv.innerHTML = annotationText
+    annotationDiv.innerText = annotationText
     let textHeight = parseFloat( window.getComputedStyle( document.getElementById('annotation-size-div') ).height )
     annotationDiv.style.display = 'none'
     return textHeight
@@ -94,14 +86,6 @@ function setTextPositionWithTextSize (highlightedData, rawLayoutData, highlightI
 
   // -----------------------
   // -----------------------
-
-  // 20200107
-  if ( (mainX1 + C + sentenceRegion.x / 2 >= mainX2 - C - sentenceRegion.x / 2) 
-    || (mainY1 + C + sentenceRegion.y / 2 >= mainY2 - C - sentenceRegion.y / 2) ) {
-    return {width: sentenceRegion.x, height: sentenceRegion.y, x_center: null, y_center: null}
-  }
-
-
   let newData = []
   for (let i = 0; i < data.length; i++) {
     // let bboxX = Math.max(data[i].bbox.x - C - sentenceRegion.x / 2, mainX1)
@@ -296,15 +280,6 @@ function setTextPositionWithTextSize (highlightedData, rawLayoutData, highlightI
   }
   // console.log('discreMatrix', discreMatrix)
 
-  // 20200107 new boundary
-  let newBoundaryX1 = null
-  let newBoundaryX2 = null
-  let newBoundaryY1 = null
-  let newBoundaryY2 = null
-  newBoundaryX1 = mainX1 + C + sentenceRegion.x / 2
-  newBoundaryX2 = mainX2 - C - sentenceRegion.x / 2
-  newBoundaryY1 = mainY1 + C + sentenceRegion.y / 2
-  newBoundaryY2 = mainY2 - C - sentenceRegion.y / 2
 
   // 计算矩形到圆心的最近位置
   let minPosX = null
@@ -316,24 +291,12 @@ function setTextPositionWithTextSize (highlightedData, rawLayoutData, highlightI
     if (isInner) {
       break
     }
-    // 20200107
-    let bboxY1 = yOrder2yRaw[i]
-    let bboxY2 = yOrder2yRaw[i+1]
-    if ( bboxY1 < newBoundaryY1 || bboxY1 > newBoundaryY2 || bboxY2 < newBoundaryY1 || bboxY2 > newBoundaryY2 ) {
-      continue
-    }
-
     for (let j = 0; j < xOrder2xRaw.length - 1; j++) {
       if (discreMatrix[i][j] == 0) {
         let bboxX1 = xOrder2xRaw[j]
         let bboxX2 = xOrder2xRaw[j+1]
-        
-        // 20200107
-        // 需要计算是否在边界内
-        if ( bboxX1 < newBoundaryX1 || bboxX1 > newBoundaryX2 || bboxX2 < newBoundaryX1 || bboxX2 > newBoundaryX2 ) {
-          continue
-        }
-
+        let bboxY1 = yOrder2yRaw[i]
+        let bboxY2 = yOrder2yRaw[i+1]
         let tangentable = false
         if (bboxX1 <= forceCenter.x && forceCenter.x <= bboxX2 && bboxY1 <= forceCenter.y && forceCenter.y <= bboxY2) {
           minDist = 0

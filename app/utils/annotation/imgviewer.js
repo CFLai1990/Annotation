@@ -1420,9 +1420,10 @@ class ImgViewer {
         .style('width', '')
         .style('height', '')
     } else {
+      let padding = 10
       divTextSentence
         .transition().duration(this.duration)
-        .style('width', config['textDiv']['width'] + 'px')
+        .style('width', (config['textDiv']['width'] + padding*2) + 'px')
         .style('height', config['textDiv']['height'] + 'px')
     }
     div
