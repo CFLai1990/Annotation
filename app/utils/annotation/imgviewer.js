@@ -875,7 +875,10 @@ class ImgViewer {
     highlightedData['mainY2'] = that.mainY2
     highlightedData['fontSize'] = that.fontSize + 'px'
     highlightedData['objects'] = configArr.map(d=>{
-      let a = d['targetArr'].flatten()
+      // let a = d['targetArr'].flatten()
+      // let a = d['targetArr'].flat()
+      let a = d['targetArr'].reduce((acc, val) => acc.concat(val), [])
+
       if (a.length < 1) {
         a = d3.range(that.imgResult.length)
       }
@@ -1144,7 +1147,8 @@ class ImgViewer {
       
       // 记得注释掉
       if (axis) {
-        let axisFlat = axis.flat()
+        // let axisFlat = axis.flat()
+        let axisFlat = axis.reduce((acc, val) => acc.concat(val), [])
         that.showRange(config, axisFlat, gRoot)
       }
     } else {
@@ -1158,7 +1162,10 @@ class ImgViewer {
         that.showRange(config, axis, gRoot)
       }
     }
-    let data = targetArr.flatten()
+    // let data = targetArr.flatten()
+    // let data = targetArr.flat()
+    let data = targetArr.reduce((acc, val) => acc.concat(val), [])
+
     console.log('targetArr', targetArr, data)
     let gTarget = gRoot.select('.gTarget')
     let gNode = gTarget.selectAll('.g-index').data(data, function(d) {return d})
