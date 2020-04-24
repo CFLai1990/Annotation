@@ -40,6 +40,7 @@ class ImgViewer {
     })
   }
   changeConfigArr(configArr) {
+    console.warn('==== configArr', configArr)
     this.configArr = configArr
     let lengthConfigArr = configArr.length
     this.lengthConfigArr = lengthConfigArr
@@ -96,6 +97,7 @@ class ImgViewer {
   getResult (img) {
     let that = this
     this.imgReceived = img
+    console.warn('===== odResults', this.imgReceived)
     let imgResult = []
     switch (that.message) {
       case 'OD_Image':
@@ -681,7 +683,7 @@ class ImgViewer {
     //     }
     //   }
     // }
-    console.log('----showSentences', message)
+    console.warn('==== nlpResults', message)
     let sentences = message['sentences']
     let entities = message['entities']
     let keySentences = sentences.map(d=>d.id)
@@ -902,7 +904,7 @@ class ImgViewer {
     })
 
     this.configArr = configArr
-    console.warn('configArr', configArr)
+    console.warn('==== configArr', configArr)
     this.lengthConfigArr = configArr.length
 
     this.drawTimeline()
