@@ -3,10 +3,10 @@
   "theme_color": "#b1624d",
   "background_color": "#fafafa",
   "display": "standalone",
-  "Scope": "/",
-  // "Scope": ".",
-  "start_url": "/",
-  // "start_url": ".",
+  // "Scope": "/",
+  "Scope": ".",
+  // "start_url": "/",
+  "start_url": ".",
   "icons": [
     {
       "src": "icon-72x72.png",

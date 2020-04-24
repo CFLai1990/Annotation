@@ -39,6 +39,12 @@ class ImgViewer {
       that.onChangeSetting(message[0], message[1])
     })
   }
+  changeConfigArr(configArr) {
+    this.configArr = configArr
+    let lengthConfigArr = configArr.length
+    this.lengthConfigArr = lengthConfigArr
+    this.drawTimeline()
+  }
   onChangeSetting (key, value) {
     let that = this
     this.configArr.forEach(d => {
@@ -860,9 +866,6 @@ class ImgViewer {
     // that.fontSize = that.paddingPoint * 0.35
     that.fontSize = that.paddingPoint * 0.42 // pie chart
     // that.fontSize = that.paddingPoint * 0.26
-    let rCircle = that.rCircle
-    let widthStroke = that.widthStroke
-    console.warn('configArr', configArr)
 
     // 合适的文本框位置
     let rawLayoutData = that.imgReceived
@@ -900,8 +903,18 @@ class ImgViewer {
 
     this.configArr = configArr
     console.warn('configArr', configArr)
-    let lengthConfigArr = configArr.length
-    this.lengthConfigArr = lengthConfigArr
+    this.lengthConfigArr = configArr.length
+
+    this.drawTimeline()
+  }
+  drawTimeline() {
+    let that = this
+    let configArr = this.configArr
+    let lengthConfigArr = this.lengthConfigArr
+    let paddingPoint = that.paddingPoint
+  
+    let rCircle = that.rCircle
+    let widthStroke = that.widthStroke
 
     let gRoot = d3.select(`${this.id} .img .gRoot`)
     let gTimeline = gRoot.select('.gTimeline')

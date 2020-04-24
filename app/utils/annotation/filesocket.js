@@ -108,6 +108,8 @@ class FSocket {
     // let entities = message.entities
     // let sentences = message.sentences
     // this.iview.showSentences(sentences, entities)
+    window.iview = this.iview
+    console.warn('======== iview', window.iview)
     this.iview.showSentences(message)
     
     this.iview.show()
