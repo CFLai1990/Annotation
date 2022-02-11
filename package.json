@@ -213,7 +213,7 @@
     "testRegex": "tests/.*\\.test\\.js$"
   },
   "dependencies": {
-    "ajv": "^6.10.0",
+    "ajv": "^6.12.3",
     "babel-polyfill": "6.23.0",
     "bootstrap-fileinput": "^4.5.2",
     "caniuse-lite": "^1.0.30000974",
