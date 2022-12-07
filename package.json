@@ -227,7 +227,7 @@
     "element-react": "^1.4.33",
     "element-theme-default": "^1.4.13",
     "events": "^3.0.0",
-    "express": "^4.16.4",
+    "express": "^4.17.3",
     "fontfaceobserver": "2.0.9",
     "gifsicle": "^4.0.1",
     "google-protobuf": "^3.5.0",
